@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ArrowRight, RotateCcw } from 'lucide-react'
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PaintingIdentity } from '@/components/PaintingIdentity'
 import { DetailCrop } from '@/components/DetailCrop'
@@ -17,6 +17,13 @@ function DrawPage() {
   const { i18n } = useTranslation()
   const en = i18n.language === 'en'
   const [phase, setPhase] = useState<CardPhase>('sealed')
+  const previousPhase = useRef(phase)
+  useLayoutEffect(() => {
+    if (previousPhase.current !== phase) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+      previousPhase.current = phase
+    }
+  }, [phase])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const daily = getDailyPainting()
   const blessing = en ? daily.blessing.en : daily.blessing.zh

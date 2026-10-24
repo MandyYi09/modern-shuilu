@@ -110,7 +110,7 @@ function PaintingPage() {
             </section>
           </>}
           <details className="optional-observation"><summary>{en ? 'Leave a thought for yourself (optional)' : '想给自己留一句话？（可选）'}</summary><p>{en ? 'Your encounter is complete without a note. Write only if something stays with you.' : '不填写也已经完成这次看画。有想记住的发现，再写下来。'}</p><label className="observer-note">{en ? 'Your discovery or question' : '你的发现或疑问'}<textarea value={note} onChange={event => { setNote(event.target.value); setSaved(false) }} placeholder={en ? 'For example: I noticed the crown and flames are separate.' : '例如：原来冠饰和头后的火焰是分开的。'} rows={3}/></label><button className="save-observation" type="button" onClick={saveNote}>{saved ? (en ? 'Saved on this device ✓' : '已记在这台设备上 ✓') : (en ? 'Keep this observation' : '记下这个观察')}</button></details>
-        <div className="painting-next"><span>{en ? 'ANOTHER ENCOUNTER' : '下一次相遇'}</span><Link to="/card/$cardId" params={{ cardId: next.id }} search={{ detail: undefined }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>{en ? 'See the next image' : '再看下一张'} <ArrowRight size={16}/></Link></div>
+        <div className="painting-next"><span>{en ? 'ANOTHER ENCOUNTER' : '下一次相遇'}</span><Link to="/card/$cardId" params={{ cardId: next.id }} search={{ detail: undefined }}>{en ? 'See the next image' : '再看下一张'} <ArrowRight size={16}/></Link></div>
         </>}
       </div>
     </div>

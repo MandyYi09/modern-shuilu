@@ -207,3 +207,8 @@ body { background: #f0f1e8; }
   .draw-side h2 { font-size:23px; }
 }
 @media(max-width:600px) { .draw-card-column { top:calc(84px + env(safe-area-inset-top)); } }
+
+/* Navigation resets must finish before reading a new page or step. */
+html { scroll-behavior:auto; }
+.painting-guide { scroll-margin-top:calc(92px + env(safe-area-inset-top)); }
+@media(max-width:800px) { .painting-guide { scroll-margin-top:calc(35dvh + 145px + env(safe-area-inset-top)); } }
