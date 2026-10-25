@@ -84,8 +84,9 @@ body { background: #f0f1e8; }
 
 /* Full-width navigation stays in document flow and at the top on scroll. */
 .app-shell { padding-top:0; }
-.navigation-bar { position:sticky; top:0; z-index:60; display:flex; align-items:center; justify-content:space-between; gap:24px; width:100%; min-height:72px; padding:env(safe-area-inset-top) clamp(18px,4.2vw,72px) 0; background:#f1f3e8; border-bottom:1px solid #a3af954d; backdrop-filter:none; }
-.navigation-bar .page-dock { position:static; display:flex; flex-wrap:nowrap; transform:none; width:auto; max-width:none; gap:clamp(12px,2.4vw,36px); padding:0; border:0; border-radius:0; background:none; box-shadow:none; backdrop-filter:none; }
+.navigation-bar { position:sticky; top:0; z-index:60; display:flex; align-items:center; justify-content:space-between; gap:18px; width:100%; min-height:72px; padding:env(safe-area-inset-top) clamp(18px,4.2vw,72px) 0; background:#f1f3e8; border-bottom:1px solid #a3af954d; backdrop-filter:none; }
+.navbar-brand { flex-shrink:0; margin-right:auto; color:#294b3d; font-family:'Noto Serif TC',serif; font-size:20px; letter-spacing:.02em; white-space:nowrap; }
+.navigation-bar .page-dock { position:static; display:flex; flex-wrap:nowrap; transform:none; width:auto; max-width:none; gap:clamp(10px,1.4vw,20px); padding:0; border:0; border-radius:0; background:none; box-shadow:none; backdrop-filter:none; }
 .navigation-bar .page-dock-link { min-height:72px; padding:0 2px; border-radius:0; font-size:12px; border-bottom:2px solid transparent; }
 .navigation-bar .page-dock-link:hover { background:none; color:#294b3d; }
 .navigation-bar .page-dock-link.is-active { background:none; color:#294b3d; border-bottom-color:#496a5c; }
@@ -146,7 +147,7 @@ body { background: #f0f1e8; }
 .reservation-reference { overflow-wrap:anywhere; }
 .blessing-form-actions button:disabled { opacity:.5; cursor:not-allowed; }
 
-.navbar-utilities { display:flex; align-items:center; gap:18px; flex-shrink:0; }
+.navbar-utilities { display:flex; align-items:center; gap:12px; flex-shrink:0; }
 .intro-trigger { border:0; background:none; padding:10px 0; color:#49635a; font-size:12px; white-space:nowrap; }
 .intro-trigger:hover { color:#294b3d; text-decoration:underline; text-underline-offset:5px; }
 .site-introduction { width:min(500px,calc(100vw - 32px)); max-height:calc(100dvh - 48px); overflow:auto; margin:auto; padding:36px; color:#2d4843; background:#f1f3e8; border:1px solid #a3af9570; border-radius:16px; box-shadow:0 20px 80px #294b3d30; }
@@ -158,10 +159,11 @@ body { background: #f0f1e8; }
 .site-introduction li strong { display:block; font-size:14px; margin-bottom:5px; }
 .site-introduction li span { font-size:13px; line-height:1.8; color:#52665f; }
 @media(max-width:700px) { .navbar-utilities { gap:10px; } .intro-trigger { font-size:10px; } }
-@media(max-width:600px) {
+@media(max-width:700px) {
   .navigation-bar { flex-wrap:wrap; gap:0; }
-  .navbar-utilities { order:-1; width:100%; justify-content:flex-end; min-height:38px; }
-  .navigation-bar .page-dock { flex-basis:100%; }
+  .navbar-brand { font-size:18px; min-height:46px; display:flex; align-items:center; }
+  .navbar-utilities { justify-content:flex-end; min-height:46px; }
+  .navigation-bar .page-dock { order:1; flex-basis:100%; justify-content:center; gap:clamp(16px,5vw,32px); }
   .navigation-bar .page-dock-link { min-height:42px; }
   .site-introduction { padding:30px 24px; }
   .site-introduction h2 { font-size:23px; }
