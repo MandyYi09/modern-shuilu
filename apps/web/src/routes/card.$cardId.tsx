@@ -72,7 +72,6 @@ function PaintingPage() {
         <div className="painting-mat">
           <div className="painting-window"><FocusedPainting painting={painting} clue={clue} character={painting.edition === 'hidden' && showCharacter} label={en ? `${painting.identity.name.en} · ${clue || 'whole painting'}` : `${painting.identity.name.zh} · ${clue ? clueCopy[clue].zh : '整幅画'}`}/></div>
         </div>
-        <div className="painting-image-credit">{painting.edition === 'hidden' && showCharacter ? (en ? 'SECRET EDITION · CONTEMPORARY ADAPTATION' : '隐藏款 · 当代趣味改编') : (en ? 'SOURCE IMAGE' : '原始图像')} · {painting.id}</div>
         <button className="reset-view" type="button" onClick={() => { setClue(clue ? null : 'head'); setShowCharacter(false) }}><RotateCcw size={14}/>{clue ? (en ? 'See the whole painting' : '看整幅画') : (en ? 'Return to the head detail' : '回到头部细节')}</button>
       </div>
       <div className="painting-notes">
@@ -88,7 +87,7 @@ function PaintingPage() {
             <p className="clue-meaning"><strong>{en ? 'How to read it' : '如何理解'}</strong>{selectedReading.meaning[en ? 'en' : 'zh']}</p>
             {lesson && <p className="clue-takeaway"><strong>{en ? 'A way to look' : '学到一种看法'}</strong>{lesson.takeaway[en ? 'en' : 'zh']}</p>}
           </> : (en ? 'Select a detail above to read more.' : '点击上方细节，查看画中所见与图像含义。')}</div>
-          {lesson && <section className="everyday-connection"><span className="overline">{en ? 'A CONNECTION TO TODAY' : '和今天的生活连起来'}</span><p>{lesson.today[en ? 'en' : 'zh']}</p><blockquote>{lesson.question[en ? 'en' : 'zh']}</blockquote><small>{en ? 'A contemporary analogy for looking; historical identification needs its own sources.' : '当代类比帮助观看；历史身份仍需结合资料判断。'}</small></section>}
+          {lesson && <section className="everyday-connection"><span className="overline">{en ? 'A CONNECTION TO TODAY' : '和今天的生活连起来'}</span><p>{lesson.today[en ? 'en' : 'zh']}</p><blockquote>{lesson.question[en ? 'en' : 'zh']}</blockquote></section>}
           {clue && selectedReading && <>
             <div className="detail-keep-row"><button type="button" className="detail-keep" aria-pressed={!!inPath} onClick={addDetail}><Plus size={15}/>{inPath ? (en ? 'Kept in your path' : '已收进观看路径') : (en ? 'Keep this detail' : '留住这个细节')}</button><Link to="/path">{en ? 'Open my path →' : '打开我的路径 →'}</Link></div>
             <section className="comparison-section" aria-label={en ? 'Compare details' : '对照细节'}>
@@ -110,7 +109,7 @@ function PaintingPage() {
             </section>
           </>}
           <details className="optional-observation"><summary>{en ? 'Leave a thought for yourself (optional)' : '想给自己留一句话？（可选）'}</summary><p>{en ? 'Your encounter is complete without a note. Write only if something stays with you.' : '不填写也已经完成这次看画。有想记住的发现，再写下来。'}</p><label className="observer-note">{en ? 'Your discovery or question' : '你的发现或疑问'}<textarea value={note} onChange={event => { setNote(event.target.value); setSaved(false) }} placeholder={en ? 'For example: I noticed the crown and flames are separate.' : '例如：原来冠饰和头后的火焰是分开的。'} rows={3}/></label><button className="save-observation" type="button" onClick={saveNote}>{saved ? (en ? 'Saved on this device ✓' : '已记在这台设备上 ✓') : (en ? 'Keep this observation' : '记下这个观察')}</button></details>
-        <div className="painting-next"><span>{en ? 'ANOTHER ENCOUNTER' : '下一次相遇'}</span><Link to="/card/$cardId" params={{ cardId: next.id }} search={{ detail: undefined }}>{en ? 'See the next image' : '再看下一张'} <ArrowRight size={16}/></Link></div>
+        <div className="painting-next"><Link to="/card/$cardId" params={{ cardId: next.id }} search={{ detail: undefined }}>{en ? 'See the next image' : '再看下一张'} <ArrowRight size={16}/></Link></div>
         </>}
       </div>
     </div>

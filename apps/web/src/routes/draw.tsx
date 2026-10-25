@@ -67,7 +67,7 @@ function DrawPage() {
           <span className="daily-card-message"><small>{en ? 'A WISH FOR TODAY' : '今日祝福'}</small><strong>{blessing}</strong></span>
           <span className="daily-card-hint">{matched ? (en ? 'Clue found · tap to see the source' : '线索已找到 · 轻触翻看原画') : (en ? 'Find its detail to unlock the source' : '找到对应局部 · 解锁原画')} {matched && <ArrowRight size={14}/>}</span>
         </div>}
-        {phase === 'original' && <div className="daily-card-original"><img decoding="async" src={daily.display} alt={en ? `Original Shuilu painting ${daily.id}` : `水陆画原画 ${daily.id}`}/><span>{en ? 'ORIGINAL PAINTING' : '原始图像'} · {daily.id}</span></div>}
+        {phase === 'original' && <div className="daily-card-original"><img decoding="async" src={daily.display} alt={en ? `Original Shuilu painting ${daily.id}` : `水陆画原画 ${daily.id}`}/></div>}
       </button>
       </div>
       <div className="draw-side">
