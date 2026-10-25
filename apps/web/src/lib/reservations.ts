@@ -16,6 +16,6 @@ export function reservationEndpoint(settings: ReservationConfig) {
 }
 export function reservationPrice(edition: 'card' | 'gift', quantity: number, en: boolean, settings = reservationConfig) {
   const price = settings.prices[edition]
-  if (price === null || !Number.isFinite(price) || price < 0) return en ? 'Price to be confirmed' : '价格待确认'
+  if (price === null || !Number.isFinite(price) || price < 0) return en ? 'Request a quote' : '咨询价格'
   return new Intl.NumberFormat(en ? 'en' : 'zh-CN', { style: 'currency', currency: settings.currency }).format(price * quantity)
 }

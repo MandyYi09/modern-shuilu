@@ -56,7 +56,7 @@ export function PaintingGuide({ painting, onFocusChange }: { painting: Painting;
       {step === 3 && <>
         <p>{en ? 'You have completed your first guided encounter. Here is what you can carry into the next painting.' : '你已经完成了第一次引导看画。再看下一幅时，可以带着这三个发现。'}</p>
         <ul className="guide-takeaways">
-          <li><span>01</span><div><strong>{en ? 'Separate the layers' : '分清层次'}</strong><p>{en ? 'Headwear, hair and background motifs can be different parts of the image.' : '冠饰、发束和背景纹样，可能是画面中的不同部分。'}</p></div></li>
+          <li><span>01</span><div><strong>{en ? 'Separate the layers' : '分清层次'}</strong><p>{en ? 'Headwear, hair and background motifs can be different parts of the image.' : '分别观察冠饰、发束和背景纹样。'}</p></div></li>
           <li><span>02</span><div><strong>{en ? 'Compare the outlines' : '比较轮廓'}</strong><p>{en ? 'An outward or upward shape can change how a figure catches your attention.' : '向外展开或向上伸出的形状，会改变人物吸引视线的方式。'}</p></div></li>
           <li><span>03</span><div><strong>{en ? 'Use familiar experience' : '借用生活经验'}</strong><p>{en ? 'The way you notice characters today can help you begin looking at an old painting.' : '今天辨认角色的经验，也能成为观察古画的起点。'}</p></div></li>
         </ul>

@@ -11,7 +11,7 @@ export const lookingLessons: Record<ClueKey, { takeaway: Bilingual; today: Bilin
   },
   hands: {
     takeaway: { zh: '先辨认手的位置、动作和持物，再看它们怎样把视线带向人物正在做的事。看清形状，是理解器物之前的一步。', en: 'Locate the hands, gestures and held objects, then notice how they direct attention to the figure’s action. Seeing the shape clearly comes before identifying the object.' },
-    today: { zh: '生活里，我们会从一个人拿着的物件和手上的动作，猜测他正在做什么。带着同样的观察方式看画，再把看到的形状与尚未确认的器名分开。', en: 'In everyday life, objects and hand movements give us clues about what someone is doing. Try the same observation here, while keeping visible shapes separate from unconfirmed object names.' },
+    today: { zh: '生活里，我们会从一个人拿着的物件和手上的动作，猜测他正在做什么。带着同样的观察方式看画，先描述看到的形状和动作。', en: 'In everyday life, objects and hand movements give us clues about what someone is doing. Try the same observation here, describing the visible shapes and gestures first.' },
     question: { zh: '先不猜名字：这个动作让你的视线停在哪里？', en: 'Before guessing a name, where does this gesture draw your eye?' },
   },
   robe: {
