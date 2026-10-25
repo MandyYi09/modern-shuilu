@@ -23,7 +23,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return <div className="app-shell">
     <header className="navigation-bar">
-    <Link to="/" className="navbar-brand"><span className="navbar-seal" aria-hidden="true">水陸</span><span>Modern Shuilu</span></Link>
     <nav className="page-dock" aria-label={en ? 'Main navigation' : '主导航'}>
       {navigation.map(item => <Link key={item.to} to={item.to} className={`page-dock-link${item.active ? ' is-active' : ''}`} aria-current={item.active ? 'page' : undefined}><span className="nav-full-label">{en ? item.en : item.zh}</span><span className="nav-mobile-label">{en ? item.shortEn : item.zh}</span></Link>)}
     </nav>
