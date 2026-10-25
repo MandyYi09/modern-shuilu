@@ -94,7 +94,8 @@ test('build output keeps fonts and replaces stale entry and CSS tags with the ve
   assert.ok(result.html.includes('data-release-loader'))
   assert.ok(result.html.includes('https://fonts.googleapis.com/css2'))
   assert.ok(!result.html.includes('src="/zhong-art/assets/old.js"'))
-  assert.ok(!result.html.includes('href="/zhong-art/assets/old.css"'))
+  assert.ok(result.html.includes('rel="preload" as="style" href="/zhong-art/assets/old.css"'))
+  assert.ok(result.html.includes('rel="modulepreload" href="/zhong-art/assets/old.js"'))
   assert.throws(() => versionedHtml('<head></head>', 'old', '/zhong-art/'))
 })
 
@@ -103,7 +104,7 @@ test('a stalled version check mounts the fallback within the startup budget', as
   const start = Date.now()
   const page = await browser([new Promise(() => {})])
   assert.equal(page.elements.at(-1).src, 'https://example.test/zhong-art/assets/old.js')
-  assert.ok(Date.now() - start < 2000, 'startup must not wait for the five-second network timeout')
+  assert.ok(Date.now() - start < 500, 'startup must not wait for the five-second network timeout')
 })
 
 test('a late manifest does not mount a second application', async () => {

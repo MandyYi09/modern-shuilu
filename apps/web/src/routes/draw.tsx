@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ArrowRight, RotateCcw } from 'lucide-react'
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PaintingIdentity } from '@/components/PaintingIdentity'
 import { DetailCrop } from '@/components/DetailCrop'
@@ -34,6 +34,18 @@ function DrawPage() {
   const candidates = [daily, ...getDetailComparisons(daily.id, focus).map(item => item.painting)]
   const offset = daily.index % candidates.length
   const choices = [...candidates.slice(offset), ...candidates.slice(0, offset)]
+  // Warm only the next interaction, instead of fetching the whole collection.
+  const clueSources = choices.map(item => publicAsset(`paintings/detail/${encodeURIComponent(item.id)}-${focus}.webp`)).join('|')
+  useEffect(() => {
+    if (phase !== 'sealed') return
+    const images = [daily.character, ...clueSources.split('|')].map(src => {
+      const image = new Image()
+      image.decoding = 'async'
+      image.src = src
+      return image
+    })
+    return () => { images.forEach(image => { image.onload = null }) }
+  }, [daily.character, clueSources, phase])
   const labels: Record<ClueKey, { zh: string; en: string }> = {
     head: { zh: '头冠', en: 'headwear' },
     hands: { zh: '手势与持物', en: 'hands and objects' },
@@ -55,7 +67,7 @@ function DrawPage() {
           <span className="daily-card-message"><small>{en ? 'A WISH FOR TODAY' : '今日祝福'}</small><strong>{blessing}</strong></span>
           <span className="daily-card-hint">{matched ? (en ? 'Clue found · tap to see the source' : '线索已找到 · 轻触翻看原画') : (en ? 'Find its detail to unlock the source' : '找到对应局部 · 解锁原画')} {matched && <ArrowRight size={14}/>}</span>
         </div>}
-        {phase === 'original' && <div className="daily-card-original"><img decoding="async" src={daily.original} alt={en ? `Original Shuilu painting ${daily.id}` : `水陆画原画 ${daily.id}`}/><span>{en ? 'ORIGINAL PAINTING' : '原始图像'} · {daily.id}</span></div>}
+        {phase === 'original' && <div className="daily-card-original"><img decoding="async" src={daily.display} alt={en ? `Original Shuilu painting ${daily.id}` : `水陆画原画 ${daily.id}`}/><span>{en ? 'ORIGINAL PAINTING' : '原始图像'} · {daily.id}</span></div>}
       </button>
       </div>
       <div className="draw-side">

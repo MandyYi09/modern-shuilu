@@ -76,20 +76,21 @@ function CreatePage() {
 
   useEffect(() => {
     let active = true
+    const controller = new AbortController()
     const preview = previewRef.current
     if (!preview) return
     const frame = document.createElement('canvas')
-    frame.width = 720; frame.height = 1560
-    void (async () => {
+    frame.width = 480; frame.height = 1040
+    const scheduled = requestAnimationFrame(() => { void (async () => {
       if (includeBlessing && !en) await document.fonts.load('66px "Noto Serif TC"', blessing).catch(() => [])
-      await renderWallpaper(frame, painting, options)
+      await renderWallpaper(frame, painting, options, { preview: true, signal: controller.signal })
       if (!active) return
       const ctx = preview.getContext('2d')
       ctx?.clearRect(0, 0, preview.width, preview.height)
       ctx?.drawImage(frame, 0, 0)
       setError('')
-    })().catch(() => { if (active) setError(en ? 'The preview could not load. Try another image.' : '预览暂时无法加载，请试试另一张图。') })
-    return () => { active = false }
+    })().catch(() => { if (active) setError(en ? 'The preview could not load. Try another image.' : '预览暂时无法加载，请试试另一张图。') }) })
+    return () => { active = false; controller.abort(); cancelAnimationFrame(scheduled) }
   }, [painting, source, layout, palette, cloud, scale, positionX, positionY, arrangement, includeBlessing, blessing, en, focusedClue])
 
   const saveImage = async () => {
@@ -126,9 +127,9 @@ function CreatePage() {
   return <section className="compose-page">
     <header className="feature-heading"><h1>{en ? 'Wallpaper DIY' : '壁纸 DIY'}</h1></header>
     <div className="compose-workspace">
-      <div className="composition-display"><canvas ref={previewRef} width="720" height="1560" className="wallpaper-preview" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={() => { dragRef.current = null }} onPointerCancel={() => { dragRef.current = null }} aria-label={en ? 'Drag to reposition your wallpaper image' : '拖动以调整壁纸中的图像位置'}/><span className="composition-caption">{source === 'character' ? (en ? 'ILLUSTRATED FIGURE' : '插画角色') : (en ? 'ORIGINAL PAINTING' : '原画')} · NO. {String(painting.index).padStart(2, '0')} · {painting.id}</span></div>
+      <div className="composition-display"><canvas ref={previewRef} width="480" height="1040" className="wallpaper-preview" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={() => { dragRef.current = null }} onPointerCancel={() => { dragRef.current = null }} aria-label={en ? 'Drag to reposition your wallpaper image' : '拖动以调整壁纸中的图像位置'}/><span className="composition-caption">{source === 'character' ? (en ? 'ILLUSTRATED FIGURE' : '插画角色') : (en ? 'ORIGINAL PAINTING' : '原画')} · NO. {String(painting.index).padStart(2, '0')} · {painting.id}</span></div>
       <div className="compose-controls">
-        <div className="choice-block"><div className="choice-heading"><span>01</span><strong>{en ? 'Choose an image' : '选一张画'}</strong><small>{String(index + 1).padStart(2, '0')} / {paintings.length}</small></div><div ref={figureSelectorRef} className="figure-selector" role="group" aria-label={en ? 'Choose an image' : '选择一张画'}>{paintings.map((item, n) => <button key={item.id} type="button" className={index === n ? 'selected' : ''} onClick={() => setIndex(n)} aria-label={en ? `Image ${n + 1}` : `第 ${n + 1} 幅`} aria-pressed={index === n}><img decoding="async" src={source === 'character' ? item.character : item.thumbnail} onError={event => { if (source === 'character') event.currentTarget.src = publicAsset(`paintings/character/${encodeURIComponent(item.id)}.webp`) }} alt="" loading="lazy"/></button>)}</div></div>
+        <div className="choice-block"><div className="choice-heading"><span>01</span><strong>{en ? 'Choose an image' : '选一张画'}</strong><small>{String(index + 1).padStart(2, '0')} / {paintings.length}</small></div><div ref={figureSelectorRef} className="figure-selector" role="group" aria-label={en ? 'Choose an image' : '选择一张画'}>{paintings.map((item, n) => <button key={item.id} type="button" className={index === n ? 'selected' : ''} onClick={() => setIndex(n)} aria-label={en ? `Image ${n + 1}` : `第 ${n + 1} 幅`} aria-pressed={index === n}><img decoding="async" src={source === 'character' ? publicAsset(`paintings/character-thumb/${encodeURIComponent(item.id)}.webp`) : item.thumbnail} onError={event => { if (source === 'character') event.currentTarget.src = publicAsset(`paintings/character/${encodeURIComponent(item.id)}.webp`) }} alt="" loading="lazy"/></button>)}</div></div>
         <div className="choice-block"><div className="choice-heading"><span>02</span><strong>{en ? 'Which version?' : '用哪一种图像？'}</strong></div><div className="source-options" role="group" aria-label={en ? 'Choose image version' : '选择图像版本'}><button type="button" className={source === 'original' ? 'selected' : ''} aria-pressed={source === 'original'} onClick={() => setSource('original')}><img decoding="async" src={painting.thumbnail} alt=""/><span><strong>{en ? 'Original painting' : '原画'}</strong><small>{en ? 'Keep the painted textures' : '保留笔触与原有色彩'}</small></span></button><button type="button" className={source === 'character' ? 'selected' : ''} aria-pressed={source === 'character'} onClick={() => setSource('character')}><img decoding="async" src={painting.character} onError={event => { event.currentTarget.src = publicAsset(`paintings/character/${encodeURIComponent(painting.id)}.webp`) }} alt=""/><span><strong>{en ? 'Illustrated figure' : '插画角色'}</strong><small>{en ? 'A new form from the painting' : '让人物走出原画'}</small></span></button></div></div>
         <div className="choice-block"><div className="choice-heading"><span>03</span><strong>{en ? 'Build the composition' : '决定构图'}</strong></div><div className="layout-options" role="group" aria-label={en ? 'Choose composition' : '选择构图'}>{layouts.map(item => <button key={item.id} type="button" className={layout === item.id ? 'selected' : ''} aria-pressed={layout === item.id} onClick={() => setLayout(item.id)}><i className={`layout-mark layout-mark-${item.id}`} aria-hidden="true"/><strong>{en ? item.en : item.zh}</strong><small>{en ? item.enNote : item.zhNote}</small></button>)}</div></div>
         <div className="choice-block"><div className="choice-heading"><span>04</span><strong>{en ? 'Move the image' : '移动画面'}</strong></div><p className="placement-hint">{en ? 'Drag the preview to place the image. Fine-tune it below.' : '拖动预览调整位置，或用滑杆微调。'}</p><div className="placement-sliders"><label>{en ? 'Size' : '大小'}<input type="range" min="75" max="140" step="5" value={scale} onChange={event => setScale(Number(event.target.value))}/><output>{scale}%</output></label><label>{en ? 'Left · right' : '左右'}<input type="range" min="-100" max="100" step="5" value={positionX} onChange={event => setPositionX(Number(event.target.value))}/><output>{positionX > 0 ? '+' : ''}{positionX}</output></label><label>{en ? 'Up · down' : '上下'}<input type="range" min="-100" max="100" step="5" value={positionY} onChange={event => setPositionY(Number(event.target.value))}/><output>{positionY > 0 ? '+' : ''}{positionY}</output></label></div><button className="placement-reset" type="button" onClick={() => { setScale(100); setPositionX(0); setPositionY(0) }}>{en ? 'Reset image placement' : '重置图像位置'}</button></div>

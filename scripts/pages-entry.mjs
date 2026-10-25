@@ -49,7 +49,7 @@ export async function loadLatestRelease(fallback, base) {
   try {
     mount(await Promise.race([
       latest(),
-      new Promise(resolve => { startupTimer = setTimeout(() => resolve(fallback), 800) }),
+      new Promise(resolve => { startupTimer = setTimeout(() => resolve(fallback), 150) }),
     ]))
   } catch { mount(fallback) }
   finally { clearTimeout(startupTimer) }
@@ -95,7 +95,9 @@ export function versionedHtml(html, version, base) {
   const release = { version, entry: entry.slice(base.length), styles }
   const data = JSON.stringify(release).replace(/</g, '\\u003c')
   const loader = `<script type="module" data-release-loader>(${loadLatestRelease.toString()})(${data}, ${JSON.stringify(base)});</script>`
-  return { html: html.replace(script, () => loader), release }
+  // Let the browser fetch the known build while the short freshness check runs.
+  const hints = `<link rel="modulepreload" href="${base}${release.entry}">` + release.styles.map(file => `<link rel="preload" as="style" href="${base}${file}">`).join('')
+  return { html: html.replace(script, () => hints + loader), release }
 }
 
 export function pagesEntry() {

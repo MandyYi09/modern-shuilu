@@ -27,31 +27,15 @@ function PaintedGuardian({ guardian, animate }: { guardian: typeof guardians[num
     if (!canvas) return
     const context = canvas.getContext('2d')
     if (!context) return
-    const motion = matchMedia('(prefers-reduced-motion: reduce)')
     const image = new Image()
-    let frame = 0
-    let lastFrame = 0
     let disposed = false
     let texture: HTMLCanvasElement | null = null
-    const render = (now: number) => {
+    const render = () => {
       if (!texture || disposed) return
-      if (animate && now - lastFrame < 1000 / 30) { frame = requestAnimationFrame(render); return }
-      lastFrame = now
-      const time = animate && !motion.matches ? now / 1000 : 0
       context.clearRect(0, 0, canvas.width, canvas.height)
       const height = 505
       const width = height * texture.width / texture.height
-      context.save()
-      context.translate(210, 284 + Math.sin(time * .8 + guardian.phase) * 5)
-      context.rotate(Math.sin(time * .55 + guardian.phase) * .012)
-      for (let strip = 0; strip < 32; strip++) {
-        const progress = strip / 32
-        const sourceY = progress * texture.height
-        const flex = Math.sin(progress * 7 - time * 1.45 + guardian.phase) * 2.7 * Math.pow(Math.abs(progress - .48) * 2, 1.5)
-        context.drawImage(texture, 0, sourceY, texture.width, Math.min(texture.height / 32 + 2, texture.height - sourceY), -width / 2 + flex, -height / 2 + progress * height, width, height / 32 + 1)
-      }
-      context.restore()
-      if (animate && !motion.matches && !document.hidden) frame = requestAnimationFrame(render)
+      context.drawImage(texture, 210 - width / 2, 284 - height / 2, width, height)
     }
     image.onload = () => {
       if (disposed) return
@@ -69,7 +53,7 @@ function PaintedGuardian({ guardian, animate }: { guardian: typeof guardians[num
         paint.restore()
         paint.globalCompositeOperation = 'destination-out'
         guardian.holes.forEach(hole => paint.fill(new Path2D(hole)))
-        render(performance.now())
+        render()
         setRendered(true)
       } catch {
         // Some embedded mobile browsers fail to create the clipped canvas.
@@ -78,15 +62,12 @@ function PaintedGuardian({ guardian, animate }: { guardian: typeof guardians[num
         setRendered(false)
       }
     }
-    const refresh = () => { cancelAnimationFrame(frame); render(performance.now()) }
-    motion.addEventListener('change', refresh)
-    document.addEventListener('visibilitychange', refresh)
     image.src = preview.src
-    return () => { disposed = true; cancelAnimationFrame(frame); motion.removeEventListener('change', refresh); document.removeEventListener('visibilitychange', refresh) }
-  }, [guardian, animate])
+    return () => { disposed = true }
+  }, [guardian, preview])
   return <>
     {!rendered && <img decoding="async" className="guardian-fallback" src={preview.src} alt="" aria-hidden="true" />}
-    <canvas ref={ref} width={420} height={560} className="painted-guardian" aria-hidden="true" />
+    <canvas ref={ref} width={420} height={560} className={`painted-guardian${animate ? ' is-moving' : ''}`} aria-hidden="true" />
   </>
 }
 

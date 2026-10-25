@@ -24,7 +24,7 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: node --test scripts/pages-entry.test.mjs
+      - run: node --test scripts/pages-entry.test.mjs scripts/web-assets.test.mjs
       - run: npm run pages:build --workspace @modern-shuilu/web
         env:
           VITE_RELEASE_VERSION: ${{ github.sha }}

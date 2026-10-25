@@ -7,7 +7,7 @@ import type { ClueKey } from '@/lib/paintingClues'
 type Region = [number, number, number, number]
 export function FocusedPainting({ painting, clue, character, label }: { painting: Painting; clue: ClueKey | null; character: boolean; label: string }) {
   const clipId = useId()
-  const src = character ? painting.character : painting.original
+  const src = character ? painting.character : painting.display
   const [loaded, setLoaded] = useState<{ src: string; width: number; height: number } | null>(null)
   useEffect(() => {
     let active = true

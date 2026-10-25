@@ -180,12 +180,15 @@ function drawWallpaper(ctx: CanvasRenderingContext2D, width: number, height: num
   ctx.restore()
 }
 
-export async function renderWallpaper(canvas: HTMLCanvasElement, painting: Painting, options: WallpaperOptions) {
+export async function renderWallpaper(canvas: HTMLCanvasElement, painting: Painting, options: WallpaperOptions, rendering: { preview?: boolean; signal?: AbortSignal } = {}) {
+  if (rendering.signal?.aborted) return
+  const originalSource = rendering.preview ? painting.display : painting.original
   const characterFallback = publicAsset(`paintings/character/${encodeURIComponent(painting.id)}.webp`)
   const image = options.source === 'character'
     ? await loadImage(painting.character).catch(() => loadImage(characterFallback))
-    : await loadImage(painting.original)
-  const original = options.focus ? await loadImage(painting.original) : image
+    : await loadImage(originalSource)
+  const original = options.focus ? await loadImage(originalSource) : image
+  if (rendering.signal?.aborted) return
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('Canvas unavailable')
   ctx.clearRect(0, 0, canvas.width, canvas.height)

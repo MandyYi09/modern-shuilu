@@ -17,6 +17,7 @@ export interface Painting {
   id: PaintingId
   index: number
   original: string
+  display: string
   thumbnail: string
   character: string
   identity: (typeof identities)[PaintingId]
@@ -30,6 +31,7 @@ export const paintings: Painting[] = paintingFiles.map((id, index) => ({
   index: index + 1,
   identity: identities[id],
   original: publicAsset(`paintings/original/${encodeURIComponent(id)}.webp`),
+  display: publicAsset(`paintings/display/${encodeURIComponent(id)}.webp`),
   thumbnail: publicAsset(`paintings/thumb/${encodeURIComponent(id)}.webp`),
   character: publicAsset(`paintings/character-web/${encodeURIComponent(id)}.webp`),
   edition: cardEditions.find(card => card.paintingId === id)!.edition as Painting['edition'],
