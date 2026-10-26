@@ -242,7 +242,9 @@ html { scroll-behavior:auto; }
 .opening-scene { padding:24px clamp(16px,3.4vw,58px) 40px; }
 .gallery-cloud-court { min-height:0; max-width:1080px; width:92%; margin:20px auto 0; }
 .gallery-cloud-court .guardian-stage {
-  height:clamp(300px,calc(100svh - 380px),500px); mask:linear-gradient(transparent,#000 6%,#000 94%,transparent); isolation:isolate;
+  height:clamp(300px,calc(100svh - 380px),500px); isolation:isolate;
+  mask-image:linear-gradient(90deg,transparent,#0003 3%,#000b 7%,#000 12%,#000 88%,#000b 93%,#0003 97%,transparent),linear-gradient(transparent,#000 8%,#000 88%,transparent);
+  mask-composite:intersect;
   background:radial-gradient(ellipse at 50% 38%,#e0e9d9 0%,#b8d4c8 52%,#dce6d600 76%);
 }
 .guardian-cloud-backdrop { position:absolute; inset:0; z-index:-1; background:url('./assets/painted-clouds.svg') center / 100% 100% no-repeat; opacity:.28; }
@@ -296,3 +298,10 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
 
 .gallery-cloud-court .guardian-stage::before { display:block; inset:auto -5% -28px; height:150px; border:0; z-index:0; opacity:.38; background:url('./assets/navigation-clouds.webp') center / 100% auto no-repeat; pointer-events:none; }
 .gallery-cloud-court .guardian-stage::before { mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent); }
+
+/* Dissolve decorative crop boundaries into the surrounding silk. */
+.page-ribbon {
+  mask-image:linear-gradient(90deg,#000 0%,#000c 38%,#0005 72%,transparent),linear-gradient(transparent,#000 12%,#000 68%,transparent);
+  mask-composite:intersect;
+}
+.navigation-clouds { mask-image:linear-gradient(transparent,#000 12%,#000 72%,transparent); }
