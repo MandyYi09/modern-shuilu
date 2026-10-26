@@ -1,4 +1,3 @@
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import guardians from '@/lib/cloud-court-guardians.json'
@@ -82,7 +81,6 @@ export function GuardianCarousel() {
     return () => observer.disconnect()
   }, [])
   const [active, setActive] = useState(1)
-  const [playing, setPlaying] = useState(true)
   const [interacting, setInteracting] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
   const touch = useRef<{ x: number; y: number } | null>(null)
@@ -95,12 +93,12 @@ export function GuardianCarousel() {
     return () => preference.removeEventListener('change', update)
   }, [])
   useEffect(() => {
-    if (!playing || interacting || reducedMotion || !visible) return
+    if (interacting || reducedMotion || !visible) return
     const timer = setInterval(() => { if (!document.hidden) setActive(index => (index + 1) % guardians.length) }, 7000)
     return () => clearInterval(timer)
-  }, [playing, interacting, reducedMotion, active, visible])
+  }, [interacting, reducedMotion, active, visible])
 
-  return <section ref={container} className="guardian-carousel" aria-roledescription="carousel" aria-label={copy.title}
+  return <section ref={container} className="guardian-carousel" tabIndex={0} aria-roledescription="carousel" aria-label={copy.title}
     onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
     onFocusCapture={() => setInteracting(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false) }}
     onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1) } }}>
@@ -111,18 +109,13 @@ export function GuardianCarousel() {
       {guardians.map((guardian, index) => {
         const offset = (index - active + guardians.length) % guardians.length
         return <div key={guardian.file} role="group" className={`guardian-slide ${offset === 0 ? 'is-active' : offset === 1 ? 'is-next' : 'is-previous'}`} aria-hidden={index !== active} aria-roledescription="slide" aria-label={`${index + 1} / ${guardians.length}: ${copy.names[index]}`}>
-          <PaintedGuardian guardian={guardian} animate={index === active && playing && visible && !reducedMotion}/>
+          <PaintedGuardian guardian={guardian} animate={index === active && !interacting && visible && !reducedMotion}/>
         </div>
       })}
       <span className="stage-cloud stage-cloud-left"/><span className="stage-cloud stage-cloud-right"/>
 
     </div>
-    <div className="carousel-controls">
-      <button className="carousel-arrow" onClick={() => move(-1)} aria-label={copy.previous}><ChevronLeft size={19}/></button>
-      <div className="carousel-pagination">{guardians.map((guardian, index) => <button key={guardian.file} aria-label={copy.names[index]} aria-current={index === active ? 'true' : undefined} onClick={() => setActive(index)}><span/></button>)}</div>
-      <button className="carousel-arrow" onClick={() => move(1)} aria-label={copy.next}><ChevronRight size={19}/></button>
-      <button className="carousel-play" aria-label={playing ? copy.pause : copy.play} aria-pressed={!playing} onClick={() => setPlaying(value => !value)}>{playing ? <Pause size={14}/> : <Play size={14}/>}</button>
-    </div>
+
 
   </section>
 }
