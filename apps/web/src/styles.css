@@ -65,7 +65,6 @@
 .daily-card-character{background:radial-gradient(circle at 50% 37%,#dce6dd 0,#dce6dd 45%,#edf1e8 78%)}
 .daily-card-character:after{content:'';position:absolute;inset:8px;border:1px solid #9aab9a99;pointer-events:none}
 .daily-character-index{position:absolute;top:18px;left:21px;z-index:3;color:#2d4843;font-size:9px;letter-spacing:.19em}
-.daily-character-halo{position:absolute;top:14%;left:10%;width:80%;aspect-ratio:1;border:1px solid #9aab9a66;border-radius:50%;box-shadow:0 0 0 13px #c7c7c718,0 0 0 37px #c7c7c70b}
 .daily-card-character img{position:absolute;z-index:2;top:4%;left:5%;width:90%;height:72%;object-fit:contain;background:transparent;filter:drop-shadow(0 10px 11px #1212129c);animation:none}
 .daily-card-message{position:absolute;z-index:3;left:0;right:0;bottom:28px;min-height:112px;padding:24px 24px 10px;background:linear-gradient(transparent,#edf1e8 25%,#edf1e8 100%);display:flex;flex-direction:column;justify-content:flex-end;gap:8px;text-align:center}
 .daily-card-message small{color:#52665f;font-size:9px;letter-spacing:.21em}
