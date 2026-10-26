@@ -1,0 +1,5 @@
+Tool: built-in image_gen
+Reference: approved Modern Shuilu concept exec-6569bded-9610-4eef-8d68-0bd288304d0b.png
+Output: navigation-clouds.webp (transparent PNG converted to WebP, quality 85)
+
+Extract/recreate ONLY the top mystical flowing cloud navigation BACKGROUND ornament from this reference as a production web decorative asset. Wide 3:1 landscape transparent PNG. No text, no letters, no symbols, no guardian figures, no UI controls, no buttons. Delicate asymmetrical elongated swirling ivory incense clouds with translucent pale jade/sage washes and very thin antique gold wisps. Left end lighter, large loose flowing swirl toward right, center quiet luminous ivory negative space for future HTML text. No enclosed rectangle, no border, no symmetrical cloud end caps, no solid canvas background. Feathered translucent alpha edges seamlessly fade to full transparency, paper watercolor detail. Cloud ribbon should occupy middle vertical third of image, with airy trailing wisps in rest. Faithfully match the ethereal navbar in reference.

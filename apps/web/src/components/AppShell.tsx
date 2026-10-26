@@ -22,9 +22,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   ]
 
   return <div className="app-shell">
-    <header className="navigation-bar">
+    <header className={`navigation-bar${en ? " navigation-en" : ""}`}>
+    <div className="navigation-clouds" aria-hidden="true"/>
     <nav className="page-dock" aria-label={en ? 'Main navigation' : '主导航'}>
-      {navigation.map(item => <Link key={item.to} to={item.to} className={`page-dock-link${item.active ? ' is-active' : ''}`} aria-current={item.active ? 'page' : undefined}><span className="nav-full-label">{en ? item.en : item.zh}</span><span className="nav-mobile-label">{en ? item.shortEn : item.zh}</span></Link>)}
+      {navigation.map(item => <Link key={item.to} to={item.to} className={`page-dock-link${item.active ? ' is-active' : ''}`} aria-current={item.active ? 'page' : undefined}><span className="nav-full-label">{en ? item.shortEn : item.zh}</span><span className="nav-mobile-label">{en ? item.shortEn : item.zh}</span></Link>)}
     </nav>
     <div className="navbar-utilities">
     <button type="button" className="intro-trigger" aria-haspopup="dialog" onClick={() => setIntroOpen(true)}>{en ? 'New here?' : '初次来访？'}</button>

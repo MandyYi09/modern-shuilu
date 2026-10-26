@@ -107,7 +107,7 @@ export function GuardianCarousel() {
     <div className="guardian-stage"
       onTouchStart={event => { touch.current = { x: event.touches[0].clientX, y: event.touches[0].clientY } }}
       onTouchEnd={event => { if (touch.current) { const x = event.changedTouches[0].clientX - touch.current.x; const y = event.changedTouches[0].clientY - touch.current.y; if (Math.abs(x) > 40 && Math.abs(x) > Math.abs(y)) move(x < 0 ? 1 : -1) } touch.current = null }}>
-      <div className="guardian-orbit orbit-outer"/><div className="guardian-orbit orbit-inner"/>
+      <div className="guardian-cloud-backdrop" aria-hidden="true"/>
       {guardians.map((guardian, index) => {
         const offset = (index - active + guardians.length) % guardians.length
         return <div key={guardian.file} role="group" className={`guardian-slide ${offset === 0 ? 'is-active' : offset === 1 ? 'is-next' : 'is-previous'}`} aria-hidden={index !== active} aria-roledescription="slide" aria-label={`${index + 1} / ${guardians.length}: ${copy.names[index]}`}>
