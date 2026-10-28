@@ -6,18 +6,24 @@ import { getDiscovered, paintings } from '@/lib/paintings'
 
 export const Route = createFileRoute('/collection')({ component: CollectionPage })
 
+const atlasPaintings = [
+  ...paintings.filter(painting => painting.id === '438'),
+  ...paintings.filter(painting => painting.edition === 'hidden' && painting.id !== '438'),
+  ...paintings.filter(painting => painting.edition !== 'hidden' && painting.id !== '438'),
+]
+
 function CollectionPage() {
   const { i18n } = useTranslation()
   const en = i18n.language === 'en'
   const [seen, setSeen] = useState<string[]>([])
   const [onlySeen, setOnlySeen] = useState(false)
   useEffect(() => { setSeen(getDiscovered()) }, [])
-  const visible = onlySeen ? paintings.filter(painting => seen.includes(painting.id)) : paintings
+  const visible = onlySeen ? atlasPaintings.filter(painting => seen.includes(painting.id)) : atlasPaintings
 
   return <section className="atlas-page">
     <header className="feature-heading"><h1>{en ? 'Painting atlas' : '原画图集'}</h1></header>
     <div className="atlas-controls"><span>{en ? `${paintings.filter(painting => seen.includes(painting.id)).length} of ${paintings.length} seen` : `已看过 ${paintings.filter(painting => seen.includes(painting.id)).length} / ${paintings.length} 幅`}</span><button type="button" className={onlySeen ? 'filter-active' : ''} onClick={() => setOnlySeen(value => !value)}>{onlySeen ? (en ? 'Show all' : '查看全部') : (en ? 'Show my encounters' : '只看遇见过的')}</button></div>
-    {visible.length ? <div className="atlas-wall">{visible.map((painting, index) => <Link key={painting.id} className={`atlas-sheet sheet-${index % 5}`} to="/card/$cardId" params={{ cardId: painting.id }}>
+    {visible.length ? <div className="atlas-wall">{visible.map((painting, index) => <Link key={painting.id} className={`atlas-sheet sheet-${index % 5}${painting.edition === 'hidden' ? ' atlas-sheet-hidden' : ''}`} to="/card/$cardId" params={{ cardId: painting.id }}>
       <span className="sheet-image"><img decoding="async" src={painting.thumbnail} alt={en ? `Shuilu painting ${painting.id}` : `水陆画图像 ${painting.id}`} loading="lazy"/></span>
       <span className="sheet-identity"><strong>{painting.identity.name[en ? 'en' : 'zh']}</strong>{painting.identity.date[en ? 'en' : 'zh'] && <small>{painting.identity.date[en ? 'en' : 'zh']}</small>}{painting.identity.source[en ? 'en' : 'zh'] && <small>{en ? 'Source: ' : '出处：'}{painting.identity.source[en ? 'en' : 'zh']}</small>}</span>
       <span className="sheet-caption"><span>{en ? `NO. ${String(painting.index).padStart(2, '0')}` : `第 ${String(painting.index).padStart(2, '0')} 幅`} <small>· {painting.edition === 'hidden' ? (en ? 'SECRET' : '隐藏款') : (en ? 'REGULAR' : '常规款')}</small></span><ArrowUpRight size={17}/></span>
