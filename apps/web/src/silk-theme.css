@@ -299,6 +299,12 @@ html { scroll-behavior:auto; }
 .gallery-cloud-court .guardian-slide.is-active { transform:scale(1); z-index:2; }
 .gallery-cloud-court .guardian-slide.is-previous { transform:translateX(-67%) scale(.83); opacity:.83; z-index:1; }
 .gallery-cloud-court .guardian-slide.is-next { transform:translateX(67%) scale(.83); opacity:.83; z-index:1; }
+.gallery-cloud-court .guardian-character { width:auto; max-width:100%; height:90%; min-height:0; align-self:center; object-fit:contain; }
+/* Doumu's current illustration includes clouds; soften its edges into the stage. */
+.gallery-cloud-court .guardian-character-doumu {
+  mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent),linear-gradient(transparent,#000 7%,#000 90%,transparent);
+  mask-composite:intersect;
+}
 .gallery-cloud-court .carousel-controls { position:relative; left:auto; bottom:auto; transform:none; justify-content:center; margin:-6px auto 0; padding:6px 14px; gap:12px; border-radius:0; background:transparent; }
 .gallery-cloud-court .carousel-arrow,.gallery-cloud-court .carousel-play { width:40px; height:40px; border:0; border-radius:0; }
 .gallery-cloud-court .carousel-play { border-left:1px solid #b1a57570; margin-left:8px; padding-left:12px; width:48px; }
@@ -312,6 +318,8 @@ html { scroll-behavior:auto; }
 .home-feature-actions .art-ticket::after { content:''; position:absolute; width:44px; height:17px; right:0; bottom:0; border-top:1px solid #c5ac6a; border-radius:100% 0 0 0; background:linear-gradient(135deg,#b2c8af80,#d4dfc300); z-index:-1; }
 .home-feature-actions .art-ticket-primary { color:#fbf5e4; background:radial-gradient(ellipse at 10% 10%,#68806a60,transparent 70%),#315b4d; border-color:#466654; }
 .home-feature-actions .art-ticket-primary::after { background:#ae5139; border-color:#d1b67c; }
+.home-feature-actions .art-ticket:nth-child(2) { color:#183e33; background:linear-gradient(135deg,#a7c2ad,#8faf99); border-color:#799b83; }
+.home-feature-actions .art-ticket:nth-child(3) { color:#294b43; background:linear-gradient(135deg,#e0ebd9,#cbdcc5); border-color:#a1b699; }
 .home-feature-actions .art-ticket:hover { transform:translateY(-3px); box-shadow:0 7px 14px #2d484314; }
 html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; font-size:16px; letter-spacing:.1em; }
 @media(max-width:1000px) and (min-width:801px) { .navigation-bar { padding-inline:24px; gap:32px; } .navigation-bar .page-dock { gap:24px; } }

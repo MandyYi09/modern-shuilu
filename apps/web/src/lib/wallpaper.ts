@@ -106,7 +106,7 @@ function drawInset(ctx: CanvasRenderingContext2D, original: HTMLImageElement, fo
   ctx.drawImage(original, (original.naturalWidth - sourceSize) / 2, sourceY, sourceSize, sourceSize, x, y, size, size)
 }
 
-function drawWallpaper(ctx: CanvasRenderingContext2D, width: number, height: number, image: HTMLImageElement, original: HTMLImageElement, painting: Painting, options: WallpaperOptions) {
+function drawWallpaper(ctx: CanvasRenderingContext2D, width: number, height: number, image: HTMLImageElement, original: HTMLImageElement, options: WallpaperOptions) {
   ctx.save()
   ctx.scale(width / wallpaperWidth, height / wallpaperHeight)
   const colours = options.palette === 'night' ? ['#101d29', '#294d55'] : options.palette === 'ink' ? ['#181b1c', '#4b4b46'] : ['#173630', '#59877a']
@@ -163,13 +163,6 @@ function drawWallpaper(ctx: CanvasRenderingContext2D, width: number, height: num
   shade.addColorStop(1, 'rgba(8, 25, 29, .78)')
   ctx.fillStyle = shade; ctx.fillRect(0, 0, wallpaperWidth, wallpaperHeight)
 
-  ctx.fillStyle = 'rgba(238, 222, 183, .85)'
-  ctx.font = '26px Arial, "PingFang SC", "Microsoft YaHei", sans-serif'
-  ctx.letterSpacing = '5px'
-  const number = String(painting.index).padStart(2, '0')
-  ctx.fillText(options.en ? `NO. ${number}` : `第 ${number} 幅`, 108, 160)
-  ctx.letterSpacing = '0px'
-
   if (options.focus) drawInset(ctx, original, options.focus)
   if (options.blessing) {
     ctx.font = options.en ? '62px Georgia, serif' : '66px "Noto Serif TC", "Songti SC", serif'
@@ -193,5 +186,5 @@ export async function renderWallpaper(canvas: HTMLCanvasElement, painting: Paint
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('Canvas unavailable')
   ctx.clearRect(0, 0, canvas.width, canvas.height)
-  drawWallpaper(ctx, canvas.width, canvas.height, image, original, painting, options)
+  drawWallpaper(ctx, canvas.width, canvas.height, image, original, options)
 }
