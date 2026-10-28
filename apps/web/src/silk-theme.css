@@ -345,9 +345,12 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
 .navigation-clouds { mask-image:linear-gradient(transparent,#000 12%,#000 72%,transparent); }
 
 /* Follow the actual navigation height when labels or font sizes change. */
-.painting-layout>.painting-view,.painting-layout.is-guided>.painting-view,.draw-card-column {
+.painting-layout>.painting-view,.painting-layout.is-guided>.painting-view,.draw-card-column,.composition-display {
   top:calc(var(--navigation-height,104px) + 4px);
 }
+/* Reveal the card without rotating its text or its button hit area. */
+.draw-card-column .daily-card-character,.draw-card-column .daily-card-original { animation-name:card-content-reveal; }
+@keyframes card-content-reveal { from { opacity:0; } to { opacity:1; } }
 .mobile-card-blessing { display:none; }
 @media(max-width:800px) {
   .painting-guide { scroll-margin-top:calc(35dvh + var(--navigation-height,104px) + 65px); }
