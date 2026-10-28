@@ -13,8 +13,8 @@ const previews: Record<string, { src: string; width: number; height: number }> =
 }
 
 const labels = {
-  'zh-TW': { title: '雲庭 · 細看人物', inscription: '雲起時 · 萬象生', names: ['人物一', '人物二', '人物三'], elements: ['先看神態', '再看衣紋', '留意持物'], previous: '上一位人物', next: '下一位人物', pause: '暫停輪播', play: '播放輪播', hint: '從原畫出發，讓舊筆觸動起來。' },
-  en: { title: 'THE CLOUD COURT', inscription: 'CLOUDS RISE · ALL THINGS AWAKEN', names: ['Figure I', 'Figure II', 'Figure III'], elements: ['Look at the face', 'Look at the robe', 'Look at the object'], previous: 'Previous figure', next: 'Next figure', pause: 'Pause carousel', play: 'Play carousel', hint: 'Old brushstrokes in motion.' },
+  'zh-TW': { carousel: '轮播图', slide: '轮播项', title: '雲庭 · 細看人物', inscription: '雲起時 · 萬象生', names: ['人物一', '人物二', '人物三'], elements: ['先看神態', '再看衣紋', '留意持物'], previous: '上一位人物', next: '下一位人物', pause: '暫停輪播', play: '播放輪播', hint: '從原畫出發，讓舊筆觸動起來。' },
+  en: { carousel: 'carousel', slide: 'slide', title: 'THE CLOUD COURT', inscription: 'CLOUDS RISE · ALL THINGS AWAKEN', names: ['Figure I', 'Figure II', 'Figure III'], elements: ['Look at the face', 'Look at the robe', 'Look at the object'], previous: 'Previous figure', next: 'Next figure', pause: 'Pause carousel', play: 'Play carousel', hint: 'Old brushstrokes in motion.' },
 }
 
 function PaintedGuardian({ guardian, animate }: { guardian: typeof guardians[number]; animate: boolean }) {
@@ -98,7 +98,7 @@ export function GuardianCarousel() {
     return () => clearInterval(timer)
   }, [interacting, reducedMotion, active, visible])
 
-  return <section ref={container} className="guardian-carousel" tabIndex={0} aria-roledescription="carousel" aria-label={copy.title}
+  return <section ref={container} className="guardian-carousel" tabIndex={0} aria-roledescription={copy.carousel} aria-label={copy.title}
     onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
     onFocusCapture={() => setInteracting(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false) }}
     onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1) } }}>
@@ -108,7 +108,7 @@ export function GuardianCarousel() {
       <div className="guardian-cloud-backdrop" aria-hidden="true"/>
       {guardians.map((guardian, index) => {
         const offset = (index - active + guardians.length) % guardians.length
-        return <div key={guardian.file} role="group" className={`guardian-slide ${offset === 0 ? 'is-active' : offset === 1 ? 'is-next' : 'is-previous'}`} aria-hidden={index !== active} aria-roledescription="slide" aria-label={`${index + 1} / ${guardians.length}: ${copy.names[index]}`}>
+        return <div key={guardian.file} role="group" className={`guardian-slide ${offset === 0 ? 'is-active' : offset === 1 ? 'is-next' : 'is-previous'}`} aria-hidden={index !== active} aria-roledescription={copy.slide} aria-label={`${index + 1} / ${guardians.length}: ${copy.names[index]}`}>
           <PaintedGuardian guardian={guardian} animate={index === active && !interacting && visible && !reducedMotion}/>
         </div>
       })}

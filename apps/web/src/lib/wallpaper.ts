@@ -164,9 +164,10 @@ function drawWallpaper(ctx: CanvasRenderingContext2D, width: number, height: num
   ctx.fillStyle = shade; ctx.fillRect(0, 0, wallpaperWidth, wallpaperHeight)
 
   ctx.fillStyle = 'rgba(238, 222, 183, .85)'
-  ctx.font = '26px Arial, sans-serif'
+  ctx.font = '26px Arial, "PingFang SC", "Microsoft YaHei", sans-serif'
   ctx.letterSpacing = '5px'
-  ctx.fillText(`NO. ${String(painting.index).padStart(2, '0')}`, 108, 160)
+  const number = String(painting.index).padStart(2, '0')
+  ctx.fillText(options.en ? `NO. ${number}` : `第 ${number} 幅`, 108, 160)
   ctx.letterSpacing = '0px'
 
   if (options.focus) drawInset(ctx, original, options.focus)

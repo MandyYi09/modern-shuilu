@@ -9,6 +9,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [introOpen, setIntroOpen] = useState(false)
   const en = i18n.language === 'en'
   useEffect(() => { document.documentElement.lang = en ? 'en' : 'zh-Hant' }, [en])
+  useEffect(() => {
+    document.title = en ? 'Modern Shuilu | Collect Chinese Heritage' : 'Modern Shuilu | 收藏传统文化之美'
+    document.querySelector('meta[name="description"]')?.setAttribute('content', en
+      ? 'Discover collectible art cards inspired by Chinese Shuilu paintings. Collect the art, reconnect with history, and carry your heritage forward.'
+      : '探索以中国水陆画为灵感的艺术收藏卡。收藏艺术，重识历史，让传统文化走进今天的生活。')
+  }, [en, pathname])
   const toggleLanguage = () => {
     const next = en ? 'zh-TW' : 'en'
     void i18n.changeLanguage(next)
@@ -29,7 +35,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     </nav>
     <div className="navbar-utilities">
     <button type="button" className="intro-trigger" aria-haspopup="dialog" onClick={() => setIntroOpen(true)}>{en ? 'New here?' : '初次来访？'}</button>
-    <button className="language-button navbar-language" type="button" onClick={toggleLanguage} aria-label={en ? 'Switch to Chinese' : 'Switch to English'} title={en ? 'Switch to Chinese' : '切換至英文'}><span className={en ? 'is-current' : undefined} aria-hidden="true">EN</span><span className="language-divider" aria-hidden="true">/</span><span className={!en ? 'is-current' : undefined} aria-hidden="true">中</span></button>
+    <button className="language-button navbar-language" type="button" onClick={toggleLanguage} aria-label={en ? 'Switch to Chinese' : '切换至英文'} title={en ? 'Switch to Chinese' : '切换至英文'}><span className={en ? 'is-current' : undefined} aria-hidden="true">EN</span><span className="language-divider" aria-hidden="true">/</span><span className={!en ? 'is-current' : undefined} aria-hidden="true">中</span></button>
     </div>
     </header>
     {introOpen && <SiteIntroduction en={en} onClose={() => setIntroOpen(false)}/>}

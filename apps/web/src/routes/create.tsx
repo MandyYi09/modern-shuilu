@@ -125,7 +125,7 @@ function CreatePage() {
   }
 
   return <section className="compose-page">
-    <header className="feature-heading"><h1>{en ? 'Wallpaper DIY' : '壁纸 DIY'}</h1></header>
+    <header className="feature-heading"><h1>{en ? 'Wallpaper DIY' : '自制壁纸'}</h1></header>
     <div className="compose-workspace">
       <div className="composition-display"><canvas ref={previewRef} width="480" height="1040" className="wallpaper-preview" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={() => { dragRef.current = null }} onPointerCancel={() => { dragRef.current = null }} aria-label={en ? 'Drag to reposition your wallpaper image' : '拖动以调整壁纸中的图像位置'}/></div>
       <div className="compose-controls">

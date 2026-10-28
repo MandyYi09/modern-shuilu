@@ -65,7 +65,7 @@ function PaintingPage() {
   const saveNote = () => { localStorage.setItem(`shuilu-note-${painting.id}`, note); if (clue) setPathEntries(updateViewingPathNote(painting.id, clue, note)); setSaved(true) }
 
   return <section className="painting-page">
-    <div className="painting-topline"><Link to="/collection" className="return-link"><ArrowLeft size={15}/>{en ? 'The atlas' : '回到画册'}</Link><span>IMAGE {String(painting.index).padStart(2, '0')} / {paintings.length} · {painting.edition === 'hidden' ? (en ? 'SECRET' : '隐藏款') : (en ? 'REGULAR' : '常规款')}</span></div>
+    <div className="painting-topline"><Link to="/collection" className="return-link"><ArrowLeft size={15}/>{en ? 'The atlas' : '回到画册'}</Link><span>{en ? `IMAGE ${String(painting.index).padStart(2, '0')}` : `第 ${String(painting.index).padStart(2, '0')} 幅`} / {paintings.length} · {painting.edition === 'hidden' ? (en ? 'SECRET' : '隐藏款') : (en ? 'REGULAR' : '常规款')}</span></div>
     <div className={`painting-layout${guided ? ' is-guided' : ''}`}>
       <div className="painting-view is-revealed">
         {painting.edition === 'hidden' && <div className="secret-source-toggle" role="group" aria-label={en ? 'Compare the adaptation and source' : '对照卡通改编与原画'}><button type="button" aria-pressed={showCharacter} onClick={() => setShowCharacter(true)}>{en ? 'Playful illustration' : '趣味卡通版'}</button><button type="button" aria-pressed={!showCharacter} onClick={() => setShowCharacter(false)}>{en ? 'Original painting' : '原始图像'}</button></div>}

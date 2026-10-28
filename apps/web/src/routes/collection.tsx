@@ -20,7 +20,7 @@ function CollectionPage() {
     {visible.length ? <div className="atlas-wall">{visible.map((painting, index) => <Link key={painting.id} className={`atlas-sheet sheet-${index % 5}`} to="/card/$cardId" params={{ cardId: painting.id }}>
       <span className="sheet-image"><img decoding="async" src={painting.thumbnail} alt={en ? `Shuilu painting ${painting.id}` : `水陆画图像 ${painting.id}`} loading="lazy"/></span>
       <span className="sheet-identity"><strong>{painting.identity.name[en ? 'en' : 'zh']}</strong>{painting.identity.date[en ? 'en' : 'zh'] && <small>{painting.identity.date[en ? 'en' : 'zh']}</small>}{painting.identity.source[en ? 'en' : 'zh'] && <small>{en ? 'Source: ' : '出处：'}{painting.identity.source[en ? 'en' : 'zh']}</small>}</span>
-      <span className="sheet-caption"><span>NO. {String(painting.index).padStart(2, '0')} <small>· {painting.edition === 'hidden' ? (en ? 'SECRET' : '隐藏款') : (en ? 'REGULAR' : '常规款')}</small></span><ArrowUpRight size={17}/></span>
+      <span className="sheet-caption"><span>{en ? `NO. ${String(painting.index).padStart(2, '0')}` : `第 ${String(painting.index).padStart(2, '0')} 幅`} <small>· {painting.edition === 'hidden' ? (en ? 'SECRET' : '隐藏款') : (en ? 'REGULAR' : '常规款')}</small></span><ArrowUpRight size={17}/></span>
       {seen.includes(painting.id) && <i className="seen-mark" aria-label={en ? 'Viewed' : '已看过'}>✓</i>}
     </Link>)}</div> : <div className="atlas-empty">{en ? 'Your encounters will appear here. The entire atlas is still open.' : '你遇见过的画会出现在这里。完整画册随时开放。'}</div>}
     <div className="atlas-colophon">{en ? `${paintings.length} unique paintings. Every interpretation begins by looking.` : `${paintings.length} 幅不同的画。每一次理解，都从仔细看开始。`}</div>

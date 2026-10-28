@@ -95,7 +95,7 @@ export function BlessingExperience({ painting, en, onClose }: { painting: Painti
       <input type="hidden" name="心愿 / Wish" value={wish.trim()}/>
       <input type="hidden" name="预约性质 / Status" value="预约意向，未付款；寺庙、费用、时效待人工确认。Reservation only; unpaid; subject to confirmation."/>
       <input type="hidden" name="信息使用同意 / Consent" value={consent ? 'Agreed to email processing for reservation follow-up' : ''}/>
-      <div hidden aria-hidden="true"><label>Leave blank<input name="_honey" tabIndex={-1} autoComplete="off"/></label></div>
+      <div hidden aria-hidden="true"><label>{t('请留空', 'Leave blank')}<input name="_honey" tabIndex={-1} autoComplete="off"/></label></div>
       <div className="blessing-checkout-grid">
         <aside className="blessing-card-summary"><div className="blessing-print"><img src={painting.character} alt={painting.identity.name[en ? 'en' : 'zh']}/></div><h3>{painting.identity.name[en ? 'en' : 'zh']}</h3><p>{packageName} × {quantity}</p><p>{total}</p></aside>
         <div className="blessing-fields">
