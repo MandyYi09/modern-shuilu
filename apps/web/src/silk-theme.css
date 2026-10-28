@@ -309,7 +309,7 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
 @media(max-width:1000px) and (min-width:801px) { .navigation-bar { padding-inline:24px; gap:32px; } .navigation-bar .page-dock { gap:24px; } }
 @media(max-width:800px) {
   .navigation-bar { min-height:104px; padding:16px 18px 8px; gap:0; }
-  .navigation-clouds { inset:-8px -15% -16px; background-size:100% 210px; opacity:.75; }
+  .navigation-clouds { inset:-8px 0 -16px; background-size:130% 210px; opacity:.75; }
   .navbar-utilities { margin-left:auto; min-height:32px; gap:18px; }
   .intro-trigger { font-size:13px; }
   .navigation-bar .page-dock { flex-basis:100%; order:1; gap:clamp(20px,5vw,38px); }
@@ -343,6 +343,17 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
   mask-composite:intersect;
 }
 .navigation-clouds { mask-image:linear-gradient(transparent,#000 12%,#000 72%,transparent); }
+
+/* Follow the actual navigation height when labels or font sizes change. */
+.painting-layout>.painting-view,.painting-layout.is-guided>.painting-view,.draw-card-column {
+  top:calc(var(--navigation-height,104px) + 4px);
+}
+.mobile-card-blessing { display:none; }
+@media(max-width:800px) {
+  .painting-guide { scroll-margin-top:calc(35dvh + var(--navigation-height,104px) + 65px); }
+  .mobile-card-blessing { display:block; margin-bottom:24px; }
+  .mobile-card-blessing p { margin:10px 0 0; font:15px/1.8 'Noto Serif TC',serif; overflow-wrap:anywhere; }
+}
 
 /* Keep the shared hem ornamental, with no visible rectangular crop. */
 .page-hem {

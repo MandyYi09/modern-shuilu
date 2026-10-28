@@ -7,7 +7,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { i18n } = useTranslation()
   const pathname = useLocation({ select: location => location.pathname })
   const [introOpen, setIntroOpen] = useState(false)
+  const navigationRef = useRef<HTMLElement>(null)
   const en = i18n.language === 'en'
+  useEffect(() => {
+    const navigation = navigationRef.current
+    const shell = navigation?.parentElement
+    if (!navigation || !shell) return
+    const update = () => shell.style.setProperty('--navigation-height', `${navigation.getBoundingClientRect().height}px`)
+    update()
+    const observer = new ResizeObserver(update)
+    observer.observe(navigation)
+    return () => { observer.disconnect(); shell.style.removeProperty('--navigation-height') }
+  }, [])
   useEffect(() => { document.documentElement.lang = en ? 'en' : 'zh-Hant' }, [en])
   useEffect(() => {
     document.title = en ? 'Modern Shuilu | Collect Chinese Heritage' : 'Modern Shuilu | 收藏传统文化之美'
@@ -28,7 +39,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   ]
 
   return <div className="app-shell">
-    <header className={`navigation-bar${en ? " navigation-en" : ""}`}>
+    <header ref={navigationRef} className={`navigation-bar${en ? " navigation-en" : ""}`}>
     <div className="navigation-clouds" aria-hidden="true"/>
     <nav className="page-dock" aria-label={en ? 'Main navigation' : '主导航'}>
       {navigation.map(item => <Link key={item.to} to={item.to} className={`page-dock-link${item.active ? ' is-active' : ''}`} aria-current={item.active ? 'page' : undefined}><span className="nav-full-label">{en ? item.shortEn : item.zh}</span><span className="nav-mobile-label">{en ? item.shortEn : item.zh}</span></Link>)}

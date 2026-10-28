@@ -71,6 +71,7 @@ function DrawPage() {
       </button>
       </div>
       <div className="draw-side">
+        {phase !== 'sealed' && <div className="mobile-card-blessing"><span className="overline">{en ? 'A WISH FOR TODAY' : '今日祝福'}</span><p>{blessing}</p></div>}
         {phase !== 'sealed' && <PaintingIdentity painting={daily} en={en}/>}
         <span className="overline">{phase === 'sealed' ? (en ? 'STAGE 01 · MEET' : '第一关 · 相遇') : phase === 'character' ? (en ? 'STAGE 02 · FIND' : '第二关 · 寻迹') : (en ? 'STAGE 03 · DISCOVER' : '第三关 · 入画')}</span>
         <h2>{phase === 'sealed' ? (en ? 'Who will you meet today?' : '今天会遇见谁？') : phase === 'character' ? (en ? 'Which detail belongs to your character?' : '哪处细节，属于你的角色？') : (en ? 'You found the way into the painting.' : '你找到了走进画里的线索。')}</h2>
