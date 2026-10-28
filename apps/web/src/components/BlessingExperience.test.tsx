@@ -17,6 +17,24 @@ function fill() {
   fireEvent.click(screen.getByRole('button', { name: '下一步 · 核对预约' }))
 }
 describe('blessing reservations', () => {
+  it.each([true, false])('uses the site language for validation (English: %s) and clears errors after editing', en => {
+    render(<BlessingExperience painting={paintings[0]} en={en} onClose={() => {}}/>)
+    fireEvent.click(screen.getByRole('button', { name: en ? 'Continue · Reservation details' : '继续 · 填写预约' }))
+    const name = screen.getByLabelText(en ? 'Name' : '称呼') as HTMLInputElement
+    const contact = screen.getByLabelText(en ? 'Contact (email, phone or WeChat)' : '联系方式（邮箱、手机或微信）') as HTMLInputElement
+    fireEvent.click(screen.getByRole('button', { name: en ? 'Next · Review' : '下一步 · 核对预约' }))
+    for (const input of [name, contact]) {
+      expect(input.validationMessage).toBe(en ? 'Please fill out this field.' : '请填写此字段。')
+      fireEvent.change(input, { target: { value: input === name ? 'Visitor' : 'visitor@example.com' } })
+      expect(input.checkValidity()).toBe(true)
+    }
+    fireEvent.click(screen.getByRole('button', { name: en ? 'Next · Review' : '下一步 · 核对预约' }))
+    const consent = screen.getByRole('checkbox') as HTMLInputElement
+    expect(consent.checkValidity()).toBe(false)
+    expect(consent.validationMessage).toBe(en ? 'Please check this box to continue.' : '请勾选此复选框后再继续。')
+    fireEvent.click(consent)
+    expect(consent.checkValidity()).toBe(true)
+  })
   it('blocks submission when delivery is unconfigured and preserves choices for editing', () => {
     render(<BlessingExperience painting={paintings[0]} en={false} onClose={() => {}}/> )
     fill()

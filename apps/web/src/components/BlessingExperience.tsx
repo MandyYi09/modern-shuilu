@@ -52,6 +52,20 @@ export function BlessingExperience({ painting, en, onClose }: { painting: Painti
     return () => { document.body.style.overflow = overflow; focus?.focus() }
   }, [])
   useEffect(() => { heading.current?.focus(); dialog.current?.scrollTo?.(0, 0) }, [step])
+  function localizeValidation(event: FormEvent<HTMLFormElement>) {
+    const input = event.target
+    if (!(input instanceof HTMLInputElement)) return
+    input.setCustomValidity('')
+    if (input.validity.valueMissing) {
+      input.setCustomValidity(input.type === 'checkbox'
+        ? t('请勾选此复选框后再继续。', 'Please check this box to continue.')
+        : t('请填写此字段。', 'Please fill out this field.'))
+    } else if (input.validity.patternMismatch) {
+      input.setCustomValidity(t('请填写内容，不能只输入空格。', 'Please enter a value, not just spaces.'))
+    } else if (input.validity.tooShort) {
+      input.setCustomValidity(t(`请至少输入 ${input.minLength} 个字符。`, `Please enter at least ${input.minLength} characters.`))
+    }
+  }
   function submit(event: FormEvent<HTMLFormElement>) {
     if (step === -1) { event.preventDefault(); setStep(0); return }
     if (step === 0) { event.preventDefault(); setStep(1); return }
@@ -65,7 +79,9 @@ export function BlessingExperience({ painting, en, onClose }: { painting: Painti
     <h2 id="blessing-title" tabIndex={-1} ref={heading}>{step === -1 ? t('一张可以留在身边的卡', 'A card to keep close') : step === 0 ? t('预约你的收藏卡', 'Reserve your card') : t('核对预约', 'Review reservation')}</h2>
     <p className="blessing-preview-note">{t('实体收藏是看画之外的自愿选择。预约不收款，费用与寄送时间将在联系后确认。', 'Physical collecting is optional. No payment now; price and delivery timing will be confirmed with you.')}</p>
     {!endpoint && <p className="reservation-unavailable" role="status">{t('预约通道尚未开放，暂时无法发送。你可以先查看方案，开放后再填写提交。', 'Reservations are not open yet. You can explore the options now and submit once the service opens.')}</p>}
-    <form action={endpoint || undefined} method="POST" onSubmit={submit}>
+    <form action={endpoint || undefined} method="POST" onSubmit={submit} onInvalid={localizeValidation} onChange={event => {
+      if (event.target instanceof HTMLInputElement) event.target.setCustomValidity('')
+    }}>
       <input type="hidden" name="_subject" value={`Modern Shuilu 预约 ${reference}`}/>
       <input type="hidden" name="_template" value="table"/>
       <input type="hidden" name="预约编号 / Reference" value={reference}/>
