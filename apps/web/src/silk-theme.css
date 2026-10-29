@@ -486,3 +486,17 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
   .comparison-mobile-controls button[aria-pressed=true] { background: #d5e1d4; border-color: #6b8775; }
   .painting-comparison-layout .painting-notes > .detail-title, .painting-comparison-layout .painting-notes > .clue-list { display: none; }
 }
+
+/* A jade silk ribbon with cloud curls, echoing the painted garments. */
+.home-feature-actions { width: min(100%, 520px); max-width: 520px; margin: 14px auto 24px; overflow: visible; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.home-feature-actions .art-ticket { min-height: 120px; padding: 32px 88px; color: #284b40; font-size: 18px; background: none; isolation: isolate; }
+.home-feature-actions .cloud-ribbon-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: -1; pointer-events: none; filter: drop-shadow(0 4px 3px #536f5814); transition: transform .25s ease, filter .25s ease; }
+.home-feature-actions .art-ticket > span { position: relative; line-height: 1.4; }
+.home-feature-actions .art-ticket:hover { background: none; }
+.home-feature-actions .art-ticket:hover .cloud-ribbon-art { transform: translateY(-2px); filter: drop-shadow(0 6px 5px #536f5826); }
+.home-feature-actions .art-ticket:focus-visible { outline: 2px solid #8b754c; outline-offset: 3px; border-radius: 45%; }
+@media(max-width:600px) {
+  .home-feature-actions .art-ticket { min-height: 90px; padding: 25px 62px; font-size: 15px; }
+  html:not([lang='en']) .home-feature-actions .art-ticket { font-size: 15px; letter-spacing: .06em; }
+}
+@media(prefers-reduced-motion:reduce) { .home-feature-actions .cloud-ribbon-art { transition: none; } .home-feature-actions .art-ticket:hover .cloud-ribbon-art { transform: none; } }

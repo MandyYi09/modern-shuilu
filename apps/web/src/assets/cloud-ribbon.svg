@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" fill="none">
+  <defs>
+    <linearGradient id="silk" x1="110" y1="24" x2="410" y2="98" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e3ebd8"/><stop offset=".48" stop-color="#d0e1d2"/><stop offset="1" stop-color="#b8d1bf"/>
+    </linearGradient>
+    <linearGradient id="fold" x1="16" y1="40" x2="500" y2="94" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a8c4b0"/><stop offset=".5" stop-color="#799f8d"/><stop offset="1" stop-color="#aac7b3"/>
+    </linearGradient>
+  </defs>
+  <!-- Turned silk ends open into cloud curls. -->
+  <path d="M93 34C69 41 54 37 48 26C43 16 28 18 24 27C19 38 29 45 37 41C42 39 43 34 39 31C51 38 46 52 32 53C22 54 14 48 9 42C12 59 25 69 42 66C61 62 67 71 61 82C56 90 46 88 44 82C39 94 50 102 61 98C73 93 79 80 100 82L93 34Z" fill="url(#fold)" stroke="#759681" stroke-width="1.2"/>
+  <path d="M427 83C450 76 467 81 474 93C480 103 495 101 499 92C504 81 494 74 486 78C481 80 480 85 484 88C472 81 477 67 491 66C502 65 509 71 514 77C511 60 498 50 481 53C462 57 456 48 462 37C467 29 477 31 479 37C484 25 473 17 462 21C450 26 444 39 423 37L427 83Z" fill="url(#fold)" stroke="#759681" stroke-width="1.2"/>
+  <path d="M81 31L101 46L92 87C77 90 68 85 63 77C82 81 89 67 81 59L81 31ZM439 89L419 74L428 33C443 30 452 35 457 43C438 39 431 53 439 61L439 89Z" fill="#789d88"/>
+  <!-- A gently bowed banner; the centre stays calm for the action label. -->
+  <path d="M81 31C171 20 345 21 439 34C429 49 429 70 439 89C346 101 172 100 81 87C91 70 91 49 81 31Z" fill="url(#silk)" stroke="#789782" stroke-width="1.3"/>
+  <path d="M92 37C184 28 337 28 428 40M92 81C183 91 338 92 428 83" stroke="#f8f3df" stroke-width="1.6"/>
+  <path d="M96 41C183 33 338 33 424 44M96 77C183 86 338 87 424 79" stroke="#b5a776" stroke-width=".7" opacity=".8"/>
+  <path d="M17 47C29 61 46 57 52 48M503 72C491 58 474 62 468 71" stroke="#e9edda" stroke-width="1.2" stroke-linecap="round"/>
+</svg>
