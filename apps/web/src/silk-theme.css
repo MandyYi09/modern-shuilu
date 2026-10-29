@@ -441,3 +441,11 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
 
 /* Hidden editions lead the cast; the artwork keeps its original colours. */
 .gallery-cloud-court .guardian-slide.is-secret-edition.is-active::before { content: ''; position: absolute; width: 110%; height: 82%; left: -5%; top: 9%; z-index: -1; border-radius: 50%; background: radial-gradient(ellipse, #e5cd8555, #f5e6b323 55%, transparent 72%); pointer-events: none; }
+
+.gallery-cloud-court .guardian-stage { cursor: default; }
+.gallery-cloud-court .guardian-stage.is-over-figure { cursor: grab; }
+.gallery-cloud-court .guardian-stage.is-dragging { cursor: grabbing; }
+.guardian-navigation { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 4px 0 8px; }
+.guardian-navigation button { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid #6f89783b; border-radius: 50%; background: #f5f3e980; color: #3d6255; cursor: pointer; }
+.guardian-navigation button:hover { background: #dce6d7; }
+.guardian-navigation button:focus-visible { outline: 2px solid #806c38; outline-offset: 3px; }

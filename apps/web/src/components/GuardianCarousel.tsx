@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
+import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { getPainting, paintings } from '@/lib/paintings'
 import { publicAsset } from '@/lib/assets'
@@ -19,6 +20,35 @@ const labels = {
   en: { carousel: 'carousel', slide: 'slide', title: 'THE CLOUD COURT', inscription: 'CLOUDS RISE · ALL THINGS AWAKEN', names: ['Figure I', 'Figure II', 'Figure III'], elements: ['Look at the face', 'Look at the robe', 'Look at the object'], previous: 'Previous figure', next: 'Next figure', pause: 'Pause carousel', play: 'Play carousel', hint: 'Old brushstrokes in motion.' },
 }
 
+// Hit-test the displayed alpha so transparent margins do not start a drag.
+const characterPixels = new WeakMap<HTMLImageElement, ImageData>()
+function hitsCharacter(image: HTMLImageElement, clientX: number, clientY: number) {
+  if (!image.complete || !image.naturalWidth) return false
+  const bounds = image.getBoundingClientRect()
+  const scale = Math.min(bounds.width / image.naturalWidth, bounds.height / image.naturalHeight)
+  if (!scale) return false
+  const x = Math.floor((clientX - bounds.left - (bounds.width - image.naturalWidth * scale) / 2) / scale)
+  const y = Math.floor((clientY - bounds.top - (bounds.height - image.naturalHeight * scale) / 2) / scale)
+  if (x < 0 || y < 0 || x >= image.naturalWidth || y >= image.naturalHeight) return false
+  let pixels = characterPixels.get(image)
+  if (!pixels) {
+    const canvas = document.createElement('canvas')
+    canvas.width = image.naturalWidth
+    canvas.height = image.naturalHeight
+    const context = canvas.getContext('2d', { willReadFrequently: true })
+    if (!context) return false
+    try {
+      context.drawImage(image, 0, 0)
+      pixels = context.getImageData(0, 0, canvas.width, canvas.height)
+      characterPixels.set(image, pixels)
+    } catch { return false }
+  }
+  return pixels.data[(y * pixels.width + x) * 4 + 3] > 32
+}
+function hitsAnyCharacter(stage: HTMLDivElement, x: number, y: number) {
+  return Array.from(stage.querySelectorAll<HTMLImageElement>('.guardian-character')).some(image => hitsCharacter(image, x, y))
+}
+
 export function GuardianCarousel() {
   const { i18n } = useTranslation()
   const copy = labels[i18n.language === 'en' ? 'en' : 'zh-TW']
@@ -36,6 +66,8 @@ export function GuardianCarousel() {
     image.src = characterSource(guardians[(active + 2) % guardians.length])
   }, [active])
   const [interacting, setInteracting] = useState(false)
+  const [hoveringFigure, setHoveringFigure] = useState(false)
+  const [paused, setPaused] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
   const drag = useRef<{ id: number; x: number; y: number } | null>(null)
   const [dragX, setDragX] = useState(0)
@@ -67,24 +99,25 @@ export function GuardianCarousel() {
     return () => preference.removeEventListener('change', update)
   }, [])
   useEffect(() => {
-    if (interacting || dragging || reducedMotion || !visible) return
+    if (paused || interacting || hoveringFigure || dragging || reducedMotion || !visible) return
     const timer = setInterval(() => { if (!document.hidden) setActive(index => (index + 1) % guardians.length) }, 7000)
     return () => clearInterval(timer)
-  }, [interacting, dragging, reducedMotion, active, visible])
+  }, [paused, interacting, hoveringFigure, dragging, reducedMotion, active, visible])
 
   return <section ref={container} className="guardian-carousel" tabIndex={0} aria-roledescription={copy.carousel} aria-label={copy.title}
-    onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
     onFocusCapture={() => setInteracting(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false) }}
     onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1) } }}>
-    <div className={`guardian-stage${dragging ? ' is-dragging' : ''}`}
+    <div className={`guardian-stage${dragging ? ' is-dragging' : ''}${hoveringFigure ? ' is-over-figure' : ''}`}
+      onPointerLeave={() => setHoveringFigure(false)}
       onPointerDown={event => {
-        if (!event.isPrimary || event.button !== 0) return
+        if (!event.isPrimary || event.button !== 0 || !hitsAnyCharacter(event.currentTarget, event.clientX, event.clientY)) return
         drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY }
         event.currentTarget.setPointerCapture(event.pointerId)
         setDragging(true)
       }}
       onPointerMove={event => {
         const start = drag.current
+        if (!start && event.pointerType === 'mouse') setHoveringFigure(hitsAnyCharacter(event.currentTarget, event.clientX, event.clientY))
         if (start?.id === event.pointerId) {
           const x = event.clientX - start.x
           const y = event.clientY - start.y
@@ -107,6 +140,11 @@ export function GuardianCarousel() {
       {ripples.map(ripple => <span key={ripple.id} className="guardian-ripple" aria-hidden="true" style={{ left: ripple.x, top: ripple.y }} onAnimationEnd={event => { if (event.target === event.currentTarget) setRipples(items => items.filter(item => item.id !== ripple.id)) }}><i/><i/><i/></span>)}
       <span className="stage-cloud stage-cloud-left"/><span className="stage-cloud stage-cloud-right"/>
 
+    </div>
+    <div className="guardian-navigation">
+      <button type="button" onClick={() => move(-1)} aria-label={copy.previous}><ChevronLeft size={20}/></button>
+      <button type="button" onClick={() => { setPaused(value => !value); setInteracting(false) }} aria-label={paused ? copy.play : copy.pause} aria-pressed={!paused}>{paused ? <Play size={17}/> : <Pause size={17}/>}</button>
+      <button type="button" onClick={() => move(1)} aria-label={copy.next}><ChevronRight size={20}/></button>
     </div>
   </section>
 }
