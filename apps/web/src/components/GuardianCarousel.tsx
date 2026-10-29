@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getPainting } from '@/lib/paintings'
 
@@ -23,7 +23,27 @@ export function GuardianCarousel() {
   const [active, setActive] = useState(1)
   const [interacting, setInteracting] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
-  const touch = useRef<{ x: number; y: number } | null>(null)
+  const drag = useRef<{ id: number; x: number; y: number } | null>(null)
+  const [dragX, setDragX] = useState(0)
+  const [dragging, setDragging] = useState(false)
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([])
+  const rippleId = useRef(0)
+  const release = (event: PointerEvent<HTMLDivElement>, cancelled = false) => {
+    const start = drag.current
+    if (!start || start.id !== event.pointerId) return
+    const x = event.clientX - start.x
+    const y = event.clientY - start.y
+    if (!cancelled && Math.abs(x) > 40 && Math.abs(x) > Math.abs(y)) move(x < 0 ? 1 : -1)
+    else if (!cancelled && Math.hypot(x, y) < 10 && !reducedMotion) {
+      const bounds = event.currentTarget.getBoundingClientRect()
+      const ripple = { id: ++rippleId.current, x: event.clientX - bounds.left, y: event.clientY - bounds.top }
+      setRipples(items => [...items.slice(-5), ripple])
+    }
+    drag.current = null
+    setDragging(false)
+    setDragX(0)
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
+  }
   const move = (direction: number) => setActive(index => (index + direction + guardians.length) % guardians.length)
   useEffect(() => {
     const preference = matchMedia('(prefers-reduced-motion: reduce)')
@@ -33,29 +53,46 @@ export function GuardianCarousel() {
     return () => preference.removeEventListener('change', update)
   }, [])
   useEffect(() => {
-    if (interacting || reducedMotion || !visible) return
+    if (interacting || dragging || reducedMotion || !visible) return
     const timer = setInterval(() => { if (!document.hidden) setActive(index => (index + 1) % guardians.length) }, 7000)
     return () => clearInterval(timer)
-  }, [interacting, reducedMotion, active, visible])
+  }, [interacting, dragging, reducedMotion, active, visible])
 
   return <section ref={container} className="guardian-carousel" tabIndex={0} aria-roledescription={copy.carousel} aria-label={copy.title}
     onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
     onFocusCapture={() => setInteracting(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false) }}
     onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1) } }}>
-    <div className="guardian-stage"
-      onTouchStart={event => { touch.current = { x: event.touches[0].clientX, y: event.touches[0].clientY } }}
-      onTouchEnd={event => { if (touch.current) { const x = event.changedTouches[0].clientX - touch.current.x; const y = event.changedTouches[0].clientY - touch.current.y; if (Math.abs(x) > 40 && Math.abs(x) > Math.abs(y)) move(x < 0 ? 1 : -1) } touch.current = null }}>
+    <div className={`guardian-stage${dragging ? ' is-dragging' : ''}`}
+      onPointerDown={event => {
+        if (!event.isPrimary || event.button !== 0) return
+        drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY }
+        event.currentTarget.setPointerCapture(event.pointerId)
+        setDragging(true)
+      }}
+      onPointerMove={event => {
+        const start = drag.current
+        if (start?.id === event.pointerId) {
+          const x = event.clientX - start.x
+          const y = event.clientY - start.y
+          if (Math.abs(x) > Math.abs(y)) setDragX(Math.max(-180, Math.min(180, x * .65)))
+        }
+      }}
+      onPointerUp={event => release(event)}
+      onPointerCancel={event => release(event, true)}
+      onLostPointerCapture={event => release(event, true)}>
       <div className="guardian-cloud-backdrop" aria-hidden="true"/>
+      <div className="guardian-drag-track" style={{ transform: `translateX(${dragX}px)` }}>
       {guardians.map((guardian, index) => {
         const offset = (index - active + guardians.length) % guardians.length
         return <div key={guardian.id} role="group" className={`guardian-slide ${offset === 0 ? 'is-active' : offset === 1 ? 'is-next' : 'is-previous'}`} aria-hidden={index !== active} aria-roledescription={copy.slide} aria-label={`${index + 1} / ${guardians.length}: ${guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']}`}>
           <img className={`painted-guardian guardian-character${guardian.id === '438' ? ' guardian-character-doumu' : ''}${index === active && !interacting && visible && !reducedMotion ? ' is-moving' : ''}`} src={guardian.character} alt={guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']} decoding="async" draggable={false}/>
         </div>
       })}
+      </div>
+      {ripples.map(ripple => <span key={ripple.id} className="guardian-ripple" aria-hidden="true" style={{ left: ripple.x, top: ripple.y }} onAnimationEnd={event => { if (event.target === event.currentTarget) setRipples(items => items.filter(item => item.id !== ripple.id)) }}><i/><i/><i/></span>)}
       <span className="stage-cloud stage-cloud-left"/><span className="stage-cloud stage-cloud-right"/>
 
     </div>
-
-
+    <p className="guardian-interaction-hint">{i18n.language === 'en' ? 'Drag to meet the figures · Tap to make ripples' : '左右拖动人物 · 轻点泛起涟漪'}</p>
   </section>
 }
