@@ -1,3 +1,7 @@
+/* Use one canvas colour through the scene, tip, and viewport remainder. */
+.app-shell.app-shell-home { background: #f2f1e6; }
+.app-shell-home main::before { display: none; }
+
 /* The home scene already has a cloud finish and background tip. */
 .app-shell-home .page-hem,
 .app-shell-home .site-footer { display: none; }
@@ -49,7 +53,7 @@
 .home-scene .home-feature-actions .art-ticket:hover::before { transform: translateY(-3px); filter: sepia(.17) saturate(.92) brightness(1.03) drop-shadow(0 5px 8px #56796a1a); }
 .home-scene .home-feature-actions .art-ticket:hover::after { transform: translateY(-3px); }
 .home-scene .home-feature-actions .art-ticket:hover .draw-cloud-arrow { transform: translateX(3px); }
-.home-scene .painting-background { position: relative; margin: -24px 0 0; padding: 8px 5% 12px; border: 0; background: #eff0e2; max-width: none; }
+.home-scene .painting-background { position: relative; margin: -24px 0 0; padding: 8px 5% 12px; border: 0; background: transparent; max-width: none; }
 @media(max-width: 767px) {
   .opening-scene.home-scene { padding: 8px 8px 0; }
   .home-scene .living-painting { mask-image: radial-gradient(ellipse 65% 57% at 50% 49%, #000 59%, #000e 73%, #0007 87%, transparent 100%), linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent), linear-gradient(transparent, #000 3%, #000 97%, transparent); }
