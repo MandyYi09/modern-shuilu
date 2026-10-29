@@ -71,7 +71,6 @@ export function DrawPage() {
   return <section className="draw-page restored-draw-journey">
     <header className="feature-heading"><h1>{en ? 'Daily draw' : '每日抽卡'}</h1><p>{en ? 'Turn a card, find a detail, then reveal its source painting.' : '翻开角色，找到细节，再揭晓它来自的原画。'}</p></header>
 
-    <ol className="journey-progress" aria-label={en ? 'Draw progress' : '抽卡进度'}>{(['sealed', 'character', 'original'] as const).map((step, index) => <li key={step} aria-current={phase === step ? 'step' : undefined}><span>{index + 1}</span>{(en ? ['Turn the card', 'Find the detail', 'Reveal the painting'] : ['翻开角色', '寻找细节', '揭晓原画'])[index]}</li>)}</ol>
 
     <div className="draw-workspace">
       <div className="draw-card-column">

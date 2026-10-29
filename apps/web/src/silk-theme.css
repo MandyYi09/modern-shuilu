@@ -508,5 +508,4 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
   .restored-draw-journey .draw-card-column .daily-card-character img { top: 7%; left: 8%; width: 84%; height: 66%; }
   .restored-draw-journey .draw-card-column .daily-card-message { display: flex; }
   .restored-draw-journey .mobile-card-blessing { display: none; }
-  .restored-draw-journey .journey-progress { flex-wrap: wrap; }
 }
