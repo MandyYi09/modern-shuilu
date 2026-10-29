@@ -439,3 +439,5 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
   .gallery-cloud-court .guardian-character { height: 74%; max-width: 85%; }
 }
 @media(prefers-reduced-motion:reduce) { .guardian-drag-track { transition: none; } .guardian-ripple { display: none; } }
+
+.gallery-cloud-court .guardian-character-doumu { mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent),linear-gradient(transparent,#000 7%,#000 90%,transparent); mask-composite:intersect; }
