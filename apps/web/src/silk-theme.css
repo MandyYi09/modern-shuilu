@@ -500,3 +500,13 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
   html:not([lang='en']) .home-feature-actions .art-ticket { font-size: 15px; letter-spacing: .06em; }
 }
 @media(prefers-reduced-motion:reduce) { .home-feature-actions .cloud-ribbon-art { transition: none; } .home-feature-actions .art-ticket:hover .cloud-ribbon-art { transform: none; } }
+
+/* Keep the restored wish on the card itself, including narrow screens. */
+@media (max-width: 800px) {
+  .restored-draw-journey .draw-card-column { position: relative; top: auto; z-index: auto; background: transparent; }
+  .restored-draw-journey .draw-card-column .daily-card { width: min(100%, 300px); height: auto; max-height: none; }
+  .restored-draw-journey .draw-card-column .daily-card-character img { top: 7%; left: 8%; width: 84%; height: 66%; }
+  .restored-draw-journey .draw-card-column .daily-card-message { display: flex; }
+  .restored-draw-journey .mobile-card-blessing { display: none; }
+  .restored-draw-journey .journey-progress { flex-wrap: wrap; }
+}
