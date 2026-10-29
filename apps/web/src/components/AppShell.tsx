@@ -70,7 +70,7 @@ function SiteIntroduction({ en, onClose }: { en: boolean; onClose: () => void })
     <h2 id="site-introduction-title">{en ? 'A small discovery in an old painting.' : '从一张卡，走近一幅画。'}</h2>
     <p>{en ? 'Shuilu paintings are used in Buddhist Shuilu rituals and depict deities and people from many walks of life. Here, illustrated characters and small details offer an easy way into these paintings—no art history knowledge needed.' : '水陆画是寺庙举行水陆法会时使用的绘画，画中既有神佛，也有世间百态。这里用插画角色和画中细节，带你轻松走近这些古画，无需古画知识。'}</p>
     <ul>
-      <li><strong>{en ? 'Draw a card' : '抽一张卡'}</strong><span>{en ? 'Meet today’s character and follow a clue back to its source.' : '遇见今天的角色，跟着线索找到它来自的原画。'}</span></li>
+      <li><strong>{en ? 'Draw a card' : '抽一张卡'}</strong><span>{en ? 'Meet one illustrated character each day.' : '每天遇见一位卡通角色，收下一句祝福。'}</span></li>
       <li><strong>{en ? 'Follow the detail' : '跟着细节看原画'}</strong><span>{en ? 'Look closer at the paintings and save your favourite details.' : '细看原画，把喜欢的细节留在「我的收藏」。'}</span></li>
       <li><strong>{en ? 'Keep a discovery' : '留下喜欢的发现'}</strong><span>{en ? 'Save a detail as you explore. Wallpaper making is there whenever you want to take an image home.' : '看画时可以收藏细节；想把喜欢的画带走，再去制作壁纸。'}</span></li>
     </ul>

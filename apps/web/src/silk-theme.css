@@ -406,3 +406,23 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
 }
 .home-feature-actions { grid-template-columns: 1fr; max-width: 340px; background: #254b3b; }
 .painting-next .paper-button { display: inline-flex; align-items: center; gap: .75rem; }
+
+/* Daily draw is a complete encounter; close looking belongs in the atlas. */
+.daily-encounter { padding-bottom: 36px; }
+.daily-encounter .feature-heading { align-items: baseline; flex-wrap: wrap; gap: 10px 24px; margin-bottom: 24px; }
+.daily-encounter .draw-workspace { max-width: 1000px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(32px, 6vw, 90px); }
+.daily-encounter .draw-card-column { position: static; padding: 0; background: transparent; }
+.daily-sealed-card, .daily-revealed-card { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: clamp(260px, calc(100dvh - var(--navigation-height, 100px) - 180px), 570px); margin: 0; padding: 0; border: 0; background: transparent; }
+.daily-sealed-card { cursor: pointer; }
+.daily-sealed-card img, .daily-revealed-card img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+.daily-revealed-card { padding: 18px; border: 1px solid #ad9c7659; border-radius: 12px; background: #faf6ec; box-shadow: 8px 12px 30px #314a4315; }
+.daily-revealed-card figcaption { flex-shrink: 0; margin-top: 12px; font-size: 11px; letter-spacing: .1em; }
+.daily-wish { margin: 24px 0; padding: 20px 0; border-block: 1px solid #8e775c40; }
+.daily-wish p { margin: 12px 0 0; font-size: 20px; }
+.daily-encounter .draw-side .daily-atlas-note { font-size: 12px; margin-bottom: 0; }
+.detail-match-character { display: block; height: 220px; width: 100%; object-fit: contain; }
+@media(max-width:700px) {
+  .daily-encounter .draw-workspace { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .daily-sealed-card, .daily-revealed-card { height: clamp(240px, 43dvh, 390px); max-width: 290px; }
+  .daily-encounter .draw-side { padding-top: 20px; }
+}

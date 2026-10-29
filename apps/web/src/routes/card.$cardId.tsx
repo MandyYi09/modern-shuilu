@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { CollectibleEntry } from '@/components/BlessingExperience'
 import { PaintingIdentity } from '@/components/PaintingIdentity'
 import { FocusedPainting } from '@/components/FocusedPainting'
+import { DetailMatch } from '@/components/DetailMatch'
 import { DetailCrop } from '@/components/DetailCrop'
 import { PaintingGuide } from '@/components/PaintingGuide'
 import { lookingLessons } from '@/lib/lookingLessons'
@@ -30,26 +31,25 @@ function PaintingPage() {
   const en = i18n.language === 'en'
   const painting = getPainting(cardId)
   const guided = guide === true && painting?.id === '5683'
-  const [clue, setClue] = useState<ClueKey | null>(detail || 'head')
+  const [clue, setClue] = useState<ClueKey | null>(detail || null)
   const [note, setNote] = useState('')
   const [saved, setSaved] = useState(false)
-  const [showCharacter, setShowCharacter] = useState(true)
+  const [showCharacter, setShowCharacter] = useState(false)
   const [comparedId, setComparedId] = useState<PaintingId | null>(null)
   const [pathEntries, setPathEntries] = useState<PathEntry[]>([])
 
   useEffect(() => {
     if (!painting) return
     discover(painting.id)
-    setClue(detail || 'head')
+    setClue(detail || null)
     setComparedId(null)
     setNote(readStoredValue(`shuilu-note-${painting.id}`, 'note') || '')
     setSaved(false)
-    setShowCharacter(true)
+    setShowCharacter(false)
     setPathEntries(readViewingPath())
   }, [painting?.id, detail, guided])
 
   if (!painting) return <section className="painting-not-found"><p>{en ? 'This image is not in the atlas.' : '画册里没有这张图。'}</p><Link to="/collection">{en ? 'Open the atlas' : '打开画册'}</Link></section>
-  const next = paintings[painting.index % paintings.length]
   const clueCopy: Record<ClueKey, { zh: string; en: string }> = {
     head: { zh: '看头冠', en: 'Headwear' },
     hands: { zh: '看手中', en: 'Held object' },
@@ -109,8 +109,9 @@ function PaintingPage() {
               </div>}
             </details>
           </>}
+          <DetailMatch key={painting.id} painting={painting} en={en}/>
           <details className="optional-observation"><summary>{en ? 'Leave a thought for yourself (optional)' : '想给自己留一句话？（可选）'}</summary><p>{en ? 'Your encounter is complete without a note. Write only if something stays with you.' : '不填写也已经完成这次看画。有想记住的发现，再写下来。'}</p><label className="observer-note">{en ? 'Your discovery or question' : '你的发现或疑问'}<textarea value={note} onChange={event => { setNote(event.target.value); setSaved(false) }} placeholder={en ? 'For example: I noticed the crown and flames are separate.' : '例如：原来冠饰和头后的火焰是分开的。'} rows={3}/></label><button className="save-observation" type="button" onClick={saveNote}>{saved ? (en ? 'Saved on this device ✓' : '已记在这台设备上 ✓') : (en ? 'Keep this observation' : '记下这个观察')}</button></details>
-        <div className="painting-next"><Link to="/card/$cardId" params={{ cardId: next.id }} search={{ detail: undefined }} className="paper-button">{en ? 'Continue to the next painting' : '继续 · 认识下一幅画'} <ArrowRight size={16}/></Link></div>
+        <div className="painting-next"><Link to="/collection" className="paper-button">{en ? 'Return to the painting atlas' : '返回原画图集'} <ArrowRight size={16}/></Link></div>
         </>}
       </div>
     </div>
