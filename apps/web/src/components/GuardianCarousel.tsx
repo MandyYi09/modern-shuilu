@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { getPainting, paintings } from '@/lib/paintings'
 import { publicAsset } from '@/lib/assets'
@@ -67,7 +66,6 @@ export function GuardianCarousel() {
   }, [active])
   const [interacting, setInteracting] = useState(false)
   const [hoveringFigure, setHoveringFigure] = useState(false)
-  const [paused, setPaused] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
   const drag = useRef<{ id: number; x: number; y: number } | null>(null)
   const [dragX, setDragX] = useState(0)
@@ -99,10 +97,10 @@ export function GuardianCarousel() {
     return () => preference.removeEventListener('change', update)
   }, [])
   useEffect(() => {
-    if (paused || interacting || hoveringFigure || dragging || reducedMotion || !visible) return
+    if (interacting || hoveringFigure || dragging || reducedMotion || !visible) return
     const timer = setInterval(() => { if (!document.hidden) setActive(index => (index + 1) % guardians.length) }, 7000)
     return () => clearInterval(timer)
-  }, [paused, interacting, hoveringFigure, dragging, reducedMotion, active, visible])
+  }, [interacting, hoveringFigure, dragging, reducedMotion, active, visible])
 
   return <section ref={container} className="guardian-carousel" tabIndex={0} aria-roledescription={copy.carousel} aria-label={copy.title}
     onFocusCapture={() => setInteracting(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false) }}
@@ -141,10 +139,6 @@ export function GuardianCarousel() {
       <span className="stage-cloud stage-cloud-left"/><span className="stage-cloud stage-cloud-right"/>
 
     </div>
-    <div className="guardian-navigation">
-      <button type="button" onClick={() => move(-1)} aria-label={copy.previous}><ChevronLeft size={20}/></button>
-      <button type="button" onClick={() => { setPaused(value => !value); setInteracting(false) }} aria-label={paused ? copy.play : copy.pause} aria-pressed={!paused}>{paused ? <Play size={17}/> : <Pause size={17}/>}</button>
-      <button type="button" onClick={() => move(1)} aria-label={copy.next}><ChevronRight size={20}/></button>
-    </div>
+
   </section>
 }
