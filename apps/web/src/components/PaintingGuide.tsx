@@ -60,7 +60,7 @@ export function PaintingGuide({ painting, onFocusChange }: { painting: Painting;
           <li><span>02</span><div><strong>{en ? 'Compare the outlines' : '比较轮廓'}</strong><p>{en ? 'An outward or upward shape can change how a figure catches your attention.' : '向外展开或向上伸出的形状，会改变人物吸引视线的方式。'}</p></div></li>
           <li><span>03</span><div><strong>{en ? 'Use familiar experience' : '借用生活经验'}</strong><p>{en ? 'The way you notice characters today can help you begin looking at an old painting.' : '今天辨认角色的经验，也能成为观察古画的起点。'}</p></div></li>
         </ul>
-        <div className="guide-finish"><Link to="/card/$cardId" params={{ cardId: painting.id }} search={{ detail: 'head' }} className="paper-button">{en ? 'Explore this painting' : '自由探索这幅画'} <ArrowRight size={16}/></Link><Link to="/collection">{en ? 'Choose another painting →' : '去画册选另一幅 →'}</Link></div>
+        <div className="guide-finish"><Link to="/card/$cardId" params={{ cardId: painting.id }} search={{ detail: 'head' }} className="paper-button">{en ? 'Explore this painting' : '自由探索这幅画'} <ArrowRight size={16}/></Link></div>
       </>}
     </div>
     <div className="guide-controls">{step > 0 && <button type="button" className="guide-back" onClick={() => setStep(step - 1)}><ArrowLeft size={14}/>{en ? 'Previous' : '上一步'}</button>}{step < 3 && <button type="button" className="paper-button" onClick={() => setStep(step + 1)}>{step === 0 ? (en ? 'Compare another image' : '看看另一幅怎么画') : step === 1 ? (en ? 'Connect it to today' : '和今天的经验连起来') : (en ? 'What did I learn?' : '看看我收获了什么')} <ArrowRight size={16}/></button>}</div>

@@ -125,7 +125,7 @@ function CreatePage() {
   }
 
   return <section className="compose-page">
-    <header className="feature-heading"><h1>{en ? 'Wallpaper DIY' : '自制壁纸'}</h1></header>
+    <header className="feature-heading"><h1>{en ? 'Make a wallpaper' : '制作壁纸'}</h1></header>
     <div className="compose-workspace">
       <div className="composition-display"><canvas ref={previewRef} width="480" height="1040" className="wallpaper-preview" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={() => { dragRef.current = null }} onPointerCancel={() => { dragRef.current = null }} aria-label={en ? 'Drag to reposition your wallpaper image' : '拖动以调整壁纸中的图像位置'}/></div>
       <div className="compose-controls">
@@ -136,12 +136,12 @@ function CreatePage() {
         <div className="choice-block"><div className="choice-heading"><span>05</span><strong>{en ? 'Cloud rhythm' : '云的节奏'}</strong></div><div className="choice-chips">{clouds.map(item => <button key={item.id} type="button" className={cloud === item.id ? 'selected' : ''} aria-pressed={cloud === item.id} onClick={() => setCloud(item.id)}>{en ? item.en : item.zh}</button>)}</div></div>
         <div className="choice-block"><div className="choice-heading"><span>06</span><strong>{en ? 'Ground colour' : '底色'}</strong></div><div className="choice-chips colour-chips">{palettes.map(item => <button key={item.id} type="button" className={palette === item.id ? 'selected' : ''} aria-pressed={palette === item.id} onClick={() => setPalette(item.id)}><i className={`palette-dot ${item.id}`}/>{en ? item.en : item.zh}</button>)}</div></div>
         <div className="choice-block blessing-choice"><div className="choice-heading"><span>07</span><strong>{en ? 'Today’s blessing' : '今日祝福'}</strong></div><label className="blessing-option"><input type="checkbox" checked={includeBlessing} onChange={event => setIncludeBlessing(event.target.checked)}/><span><strong>{en ? 'Add the blessing to my wallpaper' : '把今日抽到的祝福语放在壁纸上'}</strong><small>{en ? `From today’s card · No. ${String(daily.index).padStart(2, '0')}` : `来自今日卡片 · 第 ${String(daily.index).padStart(2, '0')} 幅`}</small></span></label>{includeBlessing && <blockquote className="blessing-choice-preview">“{blessing}”</blockquote>}</div>
-        <div className="compose-actions"><button type="button" className="paper-button" onClick={() => setArrangement(n => n + 1)}><RefreshCw size={16}/>{en ? 'Try another arrangement' : '再排一次'}</button><button type="button" className="subtle-button" disabled={isSaving} onClick={() => void saveImage()}><Download size={16}/>{isSaving ? (en ? 'Preparing wallpaper…' : '正在制作壁纸…') : (en ? 'Save phone wallpaper' : '保存手机壁纸')}</button></div>
+        <div className="compose-actions"><button type="button" className="subtle-button" onClick={() => setArrangement(n => n + 1)}><RefreshCw size={16}/>{en ? 'Try another arrangement' : '再排一次'}</button><button type="button" className="paper-button" disabled={isSaving} onClick={() => void saveImage()}><Download size={16}/>{isSaving ? (en ? 'Preparing wallpaper…' : '正在制作壁纸…') : (en ? 'Save phone wallpaper' : '保存手机壁纸')}</button></div>
         {error && <p className="compose-error" role="alert">{error}</p>}
         <p className="wallpaper-hint">{en ? 'The preview matches your 1440 × 3120 PNG. Set it as your lock screen from Photos.' : '预览与 1440 × 3120 PNG 壁纸一致；下载后可从相册设为锁屏。'}</p>
         <p className="composition-note">{en ? 'A visual study made from the source image. It does not represent a historical painting or a newly identified figure.' : '这是基于原图的视觉练习，不代表新的历史画作或人物考证。'}</p>
       </div>
     </div>
-    {focusedClue && focusedReading && <div className="composition-from-detail"><DetailCrop painting={painting} clue={focusedClue} label={en ? `Selected detail from image ${painting.index}` : `第 ${painting.index} 幅的已选细节`}/><div><span className="overline">{en ? 'BROUGHT FROM YOUR PATH' : '从你的观看路径带来'}</span><strong>{focusedReading.title[en ? 'en' : 'zh']}</strong><p>{en ? 'This source detail stays in your wallpaper, whichever image version you choose.' : '无论选择原画还是插画角色，这个原画细节都会留在你的壁纸里。'}</p></div></div>}
+    {focusedClue && focusedReading && <div className="composition-from-detail"><DetailCrop painting={painting} clue={focusedClue} label={en ? `Selected detail from image ${painting.index}` : `第 ${painting.index} 幅的已选细节`}/><div><span className="overline">{en ? 'YOUR SELECTED DETAIL' : '从收藏的细节带来'}</span><strong>{focusedReading.title[en ? 'en' : 'zh']}</strong><p>{en ? 'This source detail stays in your wallpaper, whichever image version you choose.' : '无论选择原画还是插画角色，这个原画细节都会留在你的壁纸里。'}</p></div></div>}
   </section>
 }
