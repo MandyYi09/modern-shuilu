@@ -105,7 +105,6 @@ export function GuardianCarousel() {
       })}
       </div>
       {ripples.map(ripple => <span key={ripple.id} className="guardian-ripple" aria-hidden="true" style={{ left: ripple.x, top: ripple.y }} onAnimationEnd={event => { if (event.target === event.currentTarget) setRipples(items => items.filter(item => item.id !== ripple.id)) }}><i/><i/><i/></span>)}
-      {guardians[active].edition === 'hidden' && <span className="carousel-secret-label">✦ {i18n.language === 'en' ? 'SECRET EDITION' : '隐藏款'} ✦</span>}
       <span className="stage-cloud stage-cloud-left"/><span className="stage-cloud stage-cloud-right"/>
 
     </div>

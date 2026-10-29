@@ -378,7 +378,6 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
 .page-hem svg { opacity:.28; }
 
 /* A single forward action; optional activities stay quiet until requested. */
-.home-journey-copy { text-align: center; margin: 1.25rem auto .5rem; padding: 0 1rem; line-height: 1.7; }
 .journey-progress { display: flex; justify-content: center; gap: clamp(.75rem, 3vw, 2rem); list-style: none; padding: 0; margin: 0 auto 2rem; }
 .journey-progress li { display: flex; align-items: center; gap: .5rem; opacity: .55; font-size: .85rem; }
 .journey-progress li[aria-current="step"] { opacity: 1; font-weight: 700; }
@@ -442,4 +441,3 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
 
 /* Hidden editions lead the cast; the artwork keeps its original colours. */
 .gallery-cloud-court .guardian-slide.is-secret-edition.is-active::before { content: ''; position: absolute; width: 110%; height: 82%; left: -5%; top: 9%; z-index: -1; border-radius: 50%; background: radial-gradient(ellipse, #e5cd8555, #f5e6b323 55%, transparent 72%); pointer-events: none; }
-.carousel-secret-label { position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); z-index: 4; color: #806c38; font-size: 11px; letter-spacing: .16em; white-space: nowrap; pointer-events: none; }
