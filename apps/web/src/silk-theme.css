@@ -300,11 +300,6 @@ html { scroll-behavior:auto; }
 .gallery-cloud-court .guardian-slide.is-previous { transform:translateX(-67%) scale(.83); opacity:.83; z-index:1; }
 .gallery-cloud-court .guardian-slide.is-next { transform:translateX(67%) scale(.83); opacity:.83; z-index:1; }
 .gallery-cloud-court .guardian-character { width:auto; max-width:100%; height:90%; min-height:0; align-self:center; object-fit:contain; }
-/* Doumu's current illustration includes clouds; soften its edges into the stage. */
-.gallery-cloud-court .guardian-character-doumu {
-  mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent),linear-gradient(transparent,#000 7%,#000 90%,transparent);
-  mask-composite:intersect;
-}
 .gallery-cloud-court .carousel-controls { position:relative; left:auto; bottom:auto; transform:none; justify-content:center; margin:-6px auto 0; padding:6px 14px; gap:12px; border-radius:0; background:transparent; }
 .gallery-cloud-court .carousel-arrow,.gallery-cloud-court .carousel-play { width:40px; height:40px; border:0; border-radius:0; }
 .gallery-cloud-court .carousel-play { border-left:1px solid #b1a57570; margin-left:8px; padding-left:12px; width:48px; }
@@ -434,7 +429,6 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
 .gallery-cloud-court .guardian-character { height: 76%; max-width: 88%; }
 .guardian-drag-track { position: absolute; inset: 0; transition: transform .4s ease-out; }
 .is-dragging .guardian-drag-track { transition: none; }
-.guardian-interaction-hint { margin: 0 auto 12px; text-align: center; font-size: 11px; letter-spacing: .06em; color: #52665f; }
 .guardian-ripple { position: absolute; z-index: 5; width: 14px; height: 14px; pointer-events: none; border: 1px solid #fff9e8d9; border-radius: 50%; box-shadow: 0 0 0 2px #648e8233, 0 0 14px #fff9e888; animation: guardian-ripple .9s ease-out forwards; }
 .guardian-ripple i { position: absolute; inset: -12px; border: 1px solid #f8fff5b3; border-radius: 50%; }
 .guardian-ripple i:nth-child(2) { inset: -24px; border-color: #7ba79870; }

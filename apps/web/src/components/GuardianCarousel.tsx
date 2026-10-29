@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getPainting } from '@/lib/paintings'
+import { publicAsset } from '@/lib/assets'
 
 // Use the same current illustrations as the character cards.
 const guardians = ['9549', '438', '5695'].map(id => getPainting(id)!)
@@ -85,7 +86,7 @@ export function GuardianCarousel() {
       {guardians.map((guardian, index) => {
         const offset = (index - active + guardians.length) % guardians.length
         return <div key={guardian.id} role="group" className={`guardian-slide ${offset === 0 ? 'is-active' : offset === 1 ? 'is-next' : 'is-previous'}`} aria-hidden={index !== active} aria-roledescription={copy.slide} aria-label={`${index + 1} / ${guardians.length}: ${guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']}`}>
-          <img className={`painted-guardian guardian-character${guardian.id === '438' ? ' guardian-character-doumu' : ''}${index === active && !interacting && visible && !reducedMotion ? ' is-moving' : ''}`} src={guardian.character} alt={guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']} decoding="async" draggable={false}/>
+          <img className={`painted-guardian guardian-character${guardian.id === '438' ? ' guardian-character-cutout' : ''}${index === active && !interacting && visible && !reducedMotion ? ' is-moving' : ''}`} src={guardian.id === '438' ? publicAsset('paintings/carousel/438-cutout.png') : guardian.character} alt={guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']} decoding="async" draggable={false}/>
         </div>
       })}
       </div>
@@ -93,6 +94,5 @@ export function GuardianCarousel() {
       <span className="stage-cloud stage-cloud-left"/><span className="stage-cloud stage-cloud-right"/>
 
     </div>
-    <p className="guardian-interaction-hint">{i18n.language === 'en' ? 'Drag to meet the figures · Tap to make ripples' : '左右拖动人物 · 轻点泛起涟漪'}</p>
   </section>
 }
