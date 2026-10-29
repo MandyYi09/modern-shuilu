@@ -38,7 +38,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     { to: '/path' as const, zh: '我的收藏', en: 'Saved details', shortEn: 'Saved', active: pathname === '/path' },
   ]
 
-  return <div className="app-shell">
+  return <div className={`app-shell${pathname === "/" ? " app-shell-home" : ""}`}>
     <header ref={navigationRef} className={`navigation-bar${en ? " navigation-en" : ""}`}>
     <div className="navigation-clouds" aria-hidden="true"/>
     <nav className="page-dock" aria-label={en ? 'Main navigation' : '主导航'}>
