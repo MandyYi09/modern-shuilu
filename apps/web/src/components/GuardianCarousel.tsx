@@ -1,10 +1,18 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { getPainting } from '@/lib/paintings'
+import { getPainting, paintings } from '@/lib/paintings'
 import { publicAsset } from '@/lib/assets'
 
-// Use the same current illustrations as the character cards.
-const guardians = ['9549', '438', '5695'].map(id => getPainting(id)!)
+// Open with the three favourites together. Starting at index 1 spotlights
+// the two secret editions consecutively, then continues through the atlas.
+const featuredIds = ['5695', '9549', '438']
+const guardians = [
+  ...featuredIds.map(id => getPainting(id)!),
+  ...paintings.filter(painting => !featuredIds.includes(painting.id)),
+]
+const characterSource = (painting: (typeof guardians)[number]) => painting.id === '438'
+  ? publicAsset('paintings/carousel/438-original-cutout.png')
+  : painting.character
 
 const labels = {
   'zh-TW': { carousel: '轮播图', slide: '轮播项', title: '雲庭 · 細看人物', inscription: '雲起時 · 萬象生', names: ['人物一', '人物二', '人物三'], elements: ['先看神態', '再看衣紋', '留意持物'], previous: '上一位人物', next: '下一位人物', pause: '暫停輪播', play: '播放輪播', hint: '從原畫出發，讓舊筆觸動起來。' },
@@ -22,6 +30,11 @@ export function GuardianCarousel() {
     return () => observer.disconnect()
   }, [])
   const [active, setActive] = useState(1)
+  // Warm the next incoming image without loading the entire cast at once.
+  useEffect(() => {
+    const image = new Image()
+    image.src = characterSource(guardians[(active + 2) % guardians.length])
+  }, [active])
   const [interacting, setInteracting] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
   const drag = useRef<{ id: number; x: number; y: number } | null>(null)
@@ -85,12 +98,14 @@ export function GuardianCarousel() {
       <div className="guardian-drag-track" style={{ transform: `translateX(${dragX}px)` }}>
       {guardians.map((guardian, index) => {
         const offset = (index - active + guardians.length) % guardians.length
-        return <div key={guardian.id} role="group" className={`guardian-slide ${offset === 0 ? 'is-active' : offset === 1 ? 'is-next' : 'is-previous'}`} aria-hidden={index !== active} aria-roledescription={copy.slide} aria-label={`${index + 1} / ${guardians.length}: ${guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']}`}>
-          <img className={`painted-guardian guardian-character${index === active && !interacting && visible && !reducedMotion ? ' is-moving' : ''}`} src={guardian.id === '438' ? publicAsset('paintings/carousel/438-original-cutout.png') : guardian.character} alt={guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']} decoding="async" draggable={false}/>
+        if (offset !== 0 && offset !== 1 && offset !== guardians.length - 1) return null
+        return <div key={guardian.id} role="group" className={`guardian-slide ${offset === 0 ? 'is-active' : offset === 1 ? 'is-next' : 'is-previous'}${guardian.edition === 'hidden' ? ' is-secret-edition' : ''}`} aria-hidden={index !== active} aria-roledescription={copy.slide} aria-label={`${index + 1} / ${guardians.length}: ${guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']}`}>
+          <img className={`painted-guardian guardian-character${index === active && !interacting && visible && !reducedMotion ? ' is-moving' : ''}`} src={characterSource(guardian)} alt={guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']} decoding="async" draggable={false}/>
         </div>
       })}
       </div>
       {ripples.map(ripple => <span key={ripple.id} className="guardian-ripple" aria-hidden="true" style={{ left: ripple.x, top: ripple.y }} onAnimationEnd={event => { if (event.target === event.currentTarget) setRipples(items => items.filter(item => item.id !== ripple.id)) }}><i/><i/><i/></span>)}
+      {guardians[active].edition === 'hidden' && <span className="carousel-secret-label">✦ {i18n.language === 'en' ? 'SECRET EDITION' : '隐藏款'} ✦</span>}
       <span className="stage-cloud stage-cloud-left"/><span className="stage-cloud stage-cloud-right"/>
 
     </div>
