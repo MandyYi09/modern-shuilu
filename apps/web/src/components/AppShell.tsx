@@ -33,7 +33,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const navigation = [
     { to: '/' as const, zh: '首页', en: 'Home', shortEn: 'Home', active: pathname === '/' },
     { to: '/draw' as const, zh: '每日抽卡', en: 'Daily Draw', shortEn: 'Draw', active: pathname === '/draw' },
-    { to: '/collection' as const, zh: '原画图集', en: 'Atlas', shortEn: 'Atlas', active: pathname === '/collection' || pathname.startsWith('/card/') },
+    { to: '/collection' as const, zh: '原画图集', en: 'Paintings', shortEn: 'Paintings', active: pathname === '/collection' || pathname.startsWith('/card/') },
     { to: '/create' as const, zh: '制作壁纸', en: 'Wallpaper', shortEn: 'Wallpaper', active: pathname === '/create' },
     { to: '/path' as const, zh: '我的收藏', en: 'Saved details', shortEn: 'Saved', active: pathname === '/path' },
   ]

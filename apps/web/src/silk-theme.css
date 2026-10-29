@@ -445,3 +445,44 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
 .gallery-cloud-court .guardian-stage { cursor: default; }
 .gallery-cloud-court .guardian-stage.is-over-figure { cursor: grab; }
 .gallery-cloud-court .guardian-stage.is-dragging { cursor: grabbing; }
+
+/* Keep the whole source and adaptation together, with optional detail pairs. */
+.painting-comparison-layout { grid-template-columns: minmax(0, 1.35fr) minmax(320px, .85fr); gap: clamp(28px, 4vw, 64px); }
+.painting-comparison-layout > .painting-view { width: 100%; }
+.source-character-comparison { width: 100%; }
+.source-character-pair { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 20px; }
+.source-character-comparison figure { min-width: 0; margin: 0; }
+.source-character-comparison figcaption { margin: 0 0 12px; font-size: 13px; color: #3b5a50; line-height: 1.5; }
+.comparison-image { height: clamp(280px, calc(100dvh - var(--navigation-height, 100px) - 155px), 600px); padding: 12px; background: #f8f4e9b3; border: 1px solid #9aab9a55; }
+.comparison-character .comparison-image { background: #dce6dd55; border-color: transparent; }
+.comparison-image > img, .comparison-detail-image > img { width: 100%; height: 100%; object-fit: contain; }
+.has-selected-detail .comparison-image { height: clamp(200px, 34dvh, 340px); }
+.source-character-details { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid #9aab9a66; margin-top: 20px; padding-top: 16px; }
+.comparison-detail-image { height: clamp(130px, 20dvh, 210px); padding: 8px; background: #f8f4e9b3; }
+.painting-notes .painting-identity h1 { margin: 8px 0 18px; font: 500 clamp(24px, 2.1vw, 32px)/1.35 Georgia, 'Noto Serif TC', serif; overflow-wrap: anywhere; }
+.painting-notes .painting-identity { padding-top: 16px; }
+.painting-notes .painting-identity .identity-date, .painting-notes .painting-identity .identity-source { font-size: 13px; line-height: 1.7; }
+.painting-notes h2.detail-title { font-size: 23px; margin: 26px 0 14px; }
+.painting-notes .clue-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.painting-notes .clue-list button { width: auto; flex: 1; min-width: 100px; padding: 12px 10px; border: 1px solid #9aab9a77; font-size: 14px; justify-content: space-between; gap: 8px; }
+.painting-notes .clue-list button.active { background: #d5e1d4; border-color: #6b8775; }
+.sheet-identity strong { line-height: 1.5; }
+.sheet-identity small { line-height: 1.6; }
+@media(max-width:800px) {
+  .painting-comparison-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .painting-comparison-layout > .painting-view { position: static; background: transparent; padding: 0; z-index: auto; }
+  .source-character-pair { gap: 12px; }
+  .comparison-image, .has-selected-detail .comparison-image { height: clamp(240px, 45dvh, 400px); padding: 6px; }
+  .source-character-details { gap: 12px; }
+  .comparison-detail-image { height: 180px; }
+  .navigation-en .page-dock { gap: clamp(8px, 3vw, 24px); }
+  .navigation-en .page-dock-link { font-size: clamp(15px, 3.9vw, 20px); }
+}
+.painting-next a.paper-button { color: #fffaf0; }
+.comparison-mobile-controls { display: none; }
+@media(max-width:800px) {
+  .comparison-mobile-controls { display: flex; gap: 8px; margin-top: 20px; }
+  .comparison-mobile-controls button { flex: 1; padding: 12px 6px; border: 1px solid #9aab9a77; background: transparent; color: #254b3b; font-size: 13px; }
+  .comparison-mobile-controls button[aria-pressed=true] { background: #d5e1d4; border-color: #6b8775; }
+  .painting-comparison-layout .painting-notes > .detail-title, .painting-comparison-layout .painting-notes > .clue-list { display: none; }
+}

@@ -19,7 +19,7 @@ function ViewingPathPage() {
 
   return <section className="viewing-path-page">
     <header className="feature-heading"><h1>{en ? 'Saved details' : '我的收藏'}</h1><p>{en ? 'Details and notes you saved while exploring paintings, kept on this device.' : '看画时收藏的细节与观察，保存在这台设备上。'}</p></header>
-    {entries.length === 0 ? <div className="path-empty"><span>✧</span><h2>{en ? 'Your path begins with a detail.' : '从一个细节开始。'}</h2><p>{en ? 'Open any source painting, choose headwear, an object or a garment, then keep the detail that stays with you.' : '打开任意一张原画，看看头冠、持物或衣纹，把你想继续追看的细节留在这里。'}</p><Link to="/collection" className="paper-button">{en ? 'Explore the atlas' : '去原画图集看看'} <ArrowRight size={15}/></Link></div> : <>
+    {entries.length === 0 ? <div className="path-empty"><span>✧</span><h2>{en ? 'Your path begins with a detail.' : '从一个细节开始。'}</h2><p>{en ? 'Open any source painting, choose headwear, an object or a garment, then keep the detail that stays with you.' : '打开任意一张原画，看看头冠、持物或衣纹，把你想继续追看的细节留在这里。'}</p><Link to="/collection" className="paper-button">{en ? 'Browse paintings' : '去原画图集看看'} <ArrowRight size={15}/></Link></div> : <>
       <div className="path-count"><span>{String(entries.length).padStart(2, '0')}</span>{en ? 'details kept · arranged in the order you found them' : '处细节 · 按你发现的顺序排列'}</div>
       <div className="path-trail">{entries.map((entry, index) => {
         const painting = getPainting(entry.paintingId)

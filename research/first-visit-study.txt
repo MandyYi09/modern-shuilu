@@ -1,0 +1,90 @@
+MODERN SHUILU — FIRST-VISIT USABILITY STUDY
+Status: planned; no participant sessions or findings recorded yet.
+Purpose: assess whether a first-time visitor can connect a contemporary character to its source painting and explain one visual detail.
+Site: https://mandyyi09.github.io/zhong-art/
+
+PARTICIPANTS / 参与者
+Suggested initial round: 3 Chinese-interface users and 3 English-interface users.
+Recruit people who have not used this site. Record familiarity with Shuilu paintings separately from language. Do not assume language indicates cultural knowledge.
+Each session: about 15–20 minutes. Use the participant's usual phone or computer.
+Use anonymous IDs (ZH01, EN01). Ask permission before keeping notes; obtain separate permission for screen recording. Do not collect unnecessary identifying information.
+
+主持人开场
+“我们测试的是网站，不是你的能力。请像平时一样使用，并说说你正在看什么、期待点击后发生什么。没有标准答案。你可以随时停止。你是否同意我记录匿名观察笔记？”
+Moderator opening
+“We are testing the website, not your ability. Please use it as you normally would, and tell me what you notice and what you expect to happen. There are no right answers. You can stop at any time. May I keep anonymous observation notes?”
+
+FIRST IMPRESSION / 第一印象
+Show the homepage for approximately 10 seconds, then ask without explaining the project:
+“你觉得这个网站是做什么的？你最想先做什么？”
+“What do you think this website is for? What would you try first?”
+Record the participant's own words, not a paraphrase interpreted as success.
+
+TASK 1 / 任务一
+“请找到今天属于你的角色卡。”
+“Please find your character card for today.”
+Success: the participant reveals the card and identifies the character. Record time, first action, wrong turns and help requested.
+Follow-up: “你觉得今天再次打开，会发生什么？” / “What do you expect to happen if you return later today?”
+Do not require the participant to wait a day. Refresh only if they choose to check their expectation.
+
+TASK 2 / 任务二
+“你想知道这个角色来自哪一幅古画。请找到并打开那幅画。”
+“You want to know which historical painting inspired this character. Please find and open it.”
+Do not name the Paintings menu, point to a card, or provide the character's image number.
+Success: the participant finds the correct source and recognises the connection to the character.
+Record whether the name, image or index helped; if they open a wrong painting, record how they recover.
+
+TASK 3 / 任务三
+“请找出角色和原画之间一个具体的视觉联系，并用自己的话解释。有没有什么地方不一样？”
+“Find one specific visual connection between the character and the original painting, and explain it in your own words. Is anything different?”
+Success: identifies a visible feature in both images. A general statement such as 'they look similar' is insufficient.
+Keep observation separate from historical interpretation. Do not score a participant's religious knowledge.
+For secret editions, changed gestures are a valid difference; do not imply all details must match exactly.
+
+OPTIONAL TASK 4 / 可选任务四
+“请留住你刚才发现的细节，以便以后回来找到它。”
+“Please save the detail you just noticed so you can find it again later.”
+Success: saves the detail and can locate the saved item. Record whether they expected a whole card or a detail to be saved.
+
+OPTIONAL TASK 5 / 可选任务五
+“请用你喜欢的角色或原画制作一张手机壁纸并保存。”
+“Make and save a phone wallpaper using a character or painting you like.”
+Success: downloads the image and recognises what was exported. Record whether they understand the preview and adjustments.
+
+MODERATION / 主持规则
+Allow quiet exploration. If stalled, ask “你现在在想什么？” / “What are you thinking now?”
+After approximately 90 seconds without progress, offer help and mark the attempt 'completed with help'; do not count it as independent completion.
+Do not demonstrate the expected path before the attempt.
+Do not explain visual symbols to produce the desired answer.
+Do not lead with “你觉得卡通有帮助吗？” / “Did the cartoon help?”
+
+CLOSING / 结束提问
+“现在你会怎样向朋友介绍这个网站？” / “How would you describe this website to a friend now?”
+“你记住了哪一个细节？” / “Which detail do you remember?”
+“哪个地方最让你不确定？” / “Where did you feel most unsure?”
+“哪些部分像历史资料，哪些像当代创作？” / “Which parts felt like historical information, and which felt like contemporary creative interpretation?”
+
+SESSION RECORD — COPY FOR EACH PARTICIPANT
+Participant ID:
+Date / site release commit:
+Interface language / device / viewport:
+Prior familiarity with Shuilu paintings:
+Permission for notes / recording:
+First-impression quote:
+Task 1 — independent / with help / incomplete; duration; observations; verbatim quote:
+Task 2 — independent / with help / incomplete; duration; observations; verbatim quote:
+Task 3 — independent / with help / incomplete; feature identified; source vs adaptation distinction:
+Task 4 (if attempted):
+Task 5 (if attempted):
+Closing quotes:
+Moderator interpretation (separate from observed facts):
+Possible design change / evidence supporting it:
+
+SYNTHESIS / 汇总
+List recurring observed problems, number of participants affected, their language/device and representative quotes.
+Prioritise inability to find the correct source or understand the comparison over purely cosmetic preferences.
+Report counts (for example, 2 of 6), not population-level claims or statistical significance.
+If only one person reports an issue, preserve that context rather than presenting it as universal.
+Retest the changed task with new participants where possible.
+For the portfolio, distinguish: initial design hypothesis / actual observation / resulting revision / remaining uncertainty.
+No invented participants, quotations, conversion rates, satisfaction scores or evidence of cultural impact.
