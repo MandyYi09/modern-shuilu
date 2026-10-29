@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { paintings } from '@/lib/paintings'
 import { dailyDrawDay, dailyDrawStorageKey } from '@/lib/dailyDraw'
@@ -15,11 +15,14 @@ vi.mock('react-i18next', () => ({ useTranslation: () => ({ i18n: { language: 'zh
 beforeEach(() => { localStorage.clear(); vi.spyOn(window, 'scrollTo').mockImplementation(() => {}) })
 afterEach(() => { cleanup(); vi.restoreAllMocks() })
 
-it('restores the saved card, its on-card wish, matching exercise and source-detail continuation', () => {
+it('restores the saved card, its on-card wish, matching exercise and source-detail continuation', async () => {
   const painting = paintings[0]
   localStorage.setItem(dailyDrawStorageKey, JSON.stringify({ day: dailyDrawDay(), paintingId: painting.id }))
   const { container } = render(<DrawPage/>)
-  expect(container.querySelector('.daily-card-message')?.textContent).toContain(painting.blessing.zh)
+  expect(container.querySelector('.daily-card-back')).toBeTruthy()
+  expect(container.querySelector('.daily-card-message')).toBeNull()
+  fireEvent.click(screen.getAllByRole('button', { name: '翻开今日卡片' })[0])
+  await waitFor(() => expect(container.querySelector('.daily-card-message')?.textContent).toContain(painting.blessing.zh))
   expect(screen.queryByRole('link', { name: /继续/ })).toBeNull()
   const focus = painting.edition === 'hidden' ? 'robe' : (['head', 'hands', 'robe'] as const)[(painting.index - 1) % 3]
   const candidates = [painting, ...getDetailComparisons(painting.id, focus).map(item => item.painting)]
@@ -34,4 +37,19 @@ it('restores the saved card, its on-card wish, matching exercise and source-deta
   fireEvent.click(screen.getAllByRole('button', { name: '回到角色卡' })[0])
   expect(container.querySelector('.daily-card-message')?.textContent).toContain(painting.blessing.zh)
   expect(JSON.parse(localStorage.getItem(dailyDrawStorageKey)!).paintingId).toBe(painting.id)
+})
+
+ it('starts each new visit with the back and reveals the same saved daily card', async () => {
+  const painting = paintings[2]
+  localStorage.setItem(dailyDrawStorageKey, JSON.stringify({ day: dailyDrawDay(), paintingId: painting.id }))
+  for (let visit = 0; visit < 2; visit++) {
+    const { container, unmount } = render(<DrawPage/>)
+    expect(container.querySelector('.daily-card-back')).toBeTruthy()
+    expect(container.querySelector('.draw-clue-choices')).toBeNull()
+    fireEvent.click(screen.getAllByRole('button', { name: '翻开今日卡片' })[0])
+    await waitFor(() => expect(container.querySelector('.daily-card-character img')?.getAttribute('src')).toBe(painting.character))
+    expect(container.querySelector('.draw-clue-choices')).toBeTruthy()
+    expect(JSON.parse(localStorage.getItem(dailyDrawStorageKey)!).paintingId).toBe(painting.id)
+    unmount()
+  }
 })

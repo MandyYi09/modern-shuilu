@@ -20,8 +20,10 @@ export function DrawPage() {
   const en = i18n.language === 'en'
   const drawn = useDailyDraw()
   const [drawing, setDrawing] = useState(false)
+  // The saved daily result and this visit’s reveal are separate states.
+  const [revealed, setRevealed] = useState(false)
   const [showOriginal, setShowOriginal] = useState(false)
-  const phase: CardPhase = !drawn ? 'sealed' : showOriginal ? 'original' : 'character'
+  const phase: CardPhase = !revealed || !drawn ? 'sealed' : showOriginal ? 'original' : 'character'
   const previousPhase = useRef(phase)
   useLayoutEffect(() => {
     if (previousPhase.current !== phase) {
@@ -59,9 +61,9 @@ export function DrawPage() {
   }
   const nextPhase = async () => {
     if (drawing) return
-    if (!drawn) {
+    if (phase === 'sealed') {
       setDrawing(true)
-      try { await drawDailyPainting() } finally { setDrawing(false) }
+      try { await drawDailyPainting(); setRevealed(true) } finally { setDrawing(false) }
     } else if (showOriginal) setShowOriginal(false)
     else if (matched) setShowOriginal(true)
   }
