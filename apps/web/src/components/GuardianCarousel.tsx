@@ -125,6 +125,9 @@ export function GuardianCarousel() {
       onPointerUp={event => release(event)}
       onPointerCancel={event => release(event, true)}
       onLostPointerCapture={event => release(event, true)}>
+      <div className="scene-cloud-colours" aria-hidden="true"/>
+      <div className="scene-cloud-wisp scene-cloud-wisp-left" aria-hidden="true"/>
+      <div className="scene-cloud-wisp scene-cloud-wisp-right" aria-hidden="true"/>
       <div className="guardian-cloud-backdrop" aria-hidden="true"/>
       <div className="guardian-drag-track" style={{ transform: `translateX(${dragX}px)` }}>
       {guardians.map((guardian, index) => {
