@@ -1,0 +1,20 @@
+html,body,#app,.preview-shell { width:100%;height:100%;margin:0;overflow:hidden; }
+.preview-navigation { height:12%;display:flex;align-items:center;justify-content:center;gap:7%;font:italic clamp(7px,2.4vw,16px) Georgia,serif;color:#3b5a50;background: url('./assets/navigation-clouds-cover.webp') center / 100% auto no-repeat; }
+.preview-shell main { height:88%; }
+.preview-shell .opening-scene { min-height:0;height:100%;padding:0 3%;display:flex;flex-direction:column; }
+.preview-shell .living-painting { width:100%;margin:0;flex:1;min-height:0; }
+.preview-shell .guardian-carousel,.preview-shell .guardian-stage { height:100%; }
+/* Keep animated cutouts outside ancestor masks. Doumu's soft crop is baked
+   into cover-only WebPs; the full website and source artwork stay intact. */
+.preview-shell .guardian-stage,.preview-shell .guardian-character-doumu { mask:none; }
+.preview-shell .guardian-slide { will-change:auto; }
+.preview-shell .guardian-stage::before { mask:none; }
+.preview-shell .guardian-slide { width:46%;left:27%; }
+.preview-shell .guardian-slide.is-previous { transform:translateX(-67%) scale(.83); }
+.preview-shell .guardian-slide.is-next { transform:translateX(67%) scale(.83); }
+.preview-shell .home-feature-actions { flex-shrink:0;grid-template-columns:repeat(3,minmax(0,1fr));width:80%;margin:2% auto 5%;border-radius:6px 2px; }
+.preview-shell .home-feature-actions .art-ticket { min-height:0;padding:3% 2%;font-size:clamp(6px,1.8vw,12px);white-space:nowrap; }
+.preview-shell .home-feature-actions .art-ticket + .art-ticket { border-top:0;border-left:1px solid #f1eed33b; }
+.preview-shell .home-feature-actions { background:linear-gradient(90deg,#254b3b,#6b8f78 33%,#a2bba5 67%,#dce6d7); }
+.preview-shell .home-feature-actions .art-ticket-primary { grid-column:auto; }
+.preview-shell .guardian-stage::before { height:25%;bottom:-5%;background-image:url('./assets/navigation-clouds-cover.webp'); }

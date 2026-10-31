@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import regions from '@/lib/detail-regions.json'
-import characterRegions from '@/lib/character-detail-regions.json'
 import { useId } from 'react'
 import type { Painting } from '@/lib/paintings'
 import type { ClueKey } from '@/lib/paintingClues'
@@ -18,9 +17,7 @@ export function FocusedPainting({ painting, clue, character, label }: { painting
     return () => { active = false }
   }, [src])
   if (!loaded || loaded.src !== src) return <img src={src} alt={label}/>
-  const region: Region = !clue ? [0, 0, 1, 1] : character
-    ? characterRegions[painting.id as keyof typeof characterRegions][clue] as Region
-    : regions[painting.id][clue] as Region
+  const region: Region = !clue || character ? [0, 0, 1, 1] : regions[painting.id][clue] as Region
   const [x, y, w, h] = region
   return <svg className="focused-painting" viewBox={`${x * loaded.width} ${y * loaded.height} ${w * loaded.width} ${h * loaded.height}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label={label}>
     <defs><clipPath id={clipId}><rect x={x * loaded.width} y={y * loaded.height} width={w * loaded.width} height={h * loaded.height}/></clipPath></defs>

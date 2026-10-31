@@ -4,9 +4,7 @@ import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } f
 import { useTranslation } from 'react-i18next'
 import { DetailCrop } from '@/components/DetailCrop'
 import { clueReadings, paintingClues, type ClueKey } from '@/lib/paintingClues'
-import { paintings, paintingFiles } from '@/lib/paintings'
-import { readDailyPainting } from '@/lib/dailyDraw'
-import { useDailyDraw } from '@/lib/useDailyDraw'
+import { getDailyPainting, paintings, paintingFiles } from '@/lib/paintings'
 import { publicAsset } from '@/lib/assets'
 import { renderWallpaper, wallpaperHeight, wallpaperWidth, type WallpaperCloud, type WallpaperLayout, type WallpaperOptions, type WallpaperPalette, type WallpaperSource } from '@/lib/wallpaper'
 
@@ -40,7 +38,7 @@ function CreatePage() {
   const { i18n } = useTranslation()
   const en = i18n.language === 'en'
   const { from, focus, source: entrySource } = Route.useSearch()
-  const [index, setIndex] = useState(() => { const found = paintings.findIndex(item => item.id === from); return found >= 0 ? found : 0 })
+  const [index, setIndex] = useState(() => { const found = paintings.findIndex(item => item.id === from); return found >= 0 ? found : paintings.findIndex(item => item.id === getDailyPainting().id) })
   const [source, setSource] = useState<WallpaperSource>(entrySource ?? 'original')
   const [layout, setLayout] = useState<WallpaperLayout>('portrait')
   const [palette, setPalette] = useState<WallpaperPalette>('night')
@@ -53,8 +51,8 @@ function CreatePage() {
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState('')
   const painting = paintings[index]
-  const daily = useDailyDraw()
-  const blessing = daily?.blessing[en ? 'en' : 'zh'] ?? ''
+  const daily = getDailyPainting()
+  const blessing = daily.blessing[en ? 'en' : 'zh']
   const focusedClue = from === painting.id && focus ? focus : null
   const focusedReading = focusedClue ? clueReadings[paintingClues[painting.id][focusedClue].motif] : null
   const previewRef = useRef<HTMLCanvasElement>(null)
@@ -62,8 +60,7 @@ function CreatePage() {
   const dragRef = useRef<{ x: number; y: number; positionX: number; positionY: number } | null>(null)
 
   useEffect(() => {
-    const selected = from ?? readDailyPainting()?.id
-    if (selected) setIndex(Math.max(0, paintings.findIndex(item => item.id === selected)))
+    if (from) setIndex(Math.max(0, paintings.findIndex(item => item.id === from)))
   }, [from])
   useEffect(() => { if (entrySource) setSource(entrySource) }, [entrySource])
   useEffect(() => {
@@ -74,7 +71,7 @@ function CreatePage() {
 
   const options: WallpaperOptions = {
     source, layout, palette, cloud, scale, positionX, positionY, arrangement,
-    blessing: includeBlessing && daily ? blessing : null, en, focus: focusedClue,
+    blessing: includeBlessing ? blessing : null, en, focus: focusedClue,
   }
 
   useEffect(() => {
@@ -128,23 +125,23 @@ function CreatePage() {
   }
 
   return <section className="compose-page">
-    <header className="feature-heading"><h1>{en ? 'Make a wallpaper' : '制作壁纸'}</h1></header>
+    <header className="feature-heading"><h1>{en ? 'Wallpaper DIY' : '自制壁纸'}</h1></header>
     <div className="compose-workspace">
       <div className="composition-display"><canvas ref={previewRef} width="480" height="1040" className="wallpaper-preview" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={() => { dragRef.current = null }} onPointerCancel={() => { dragRef.current = null }} aria-label={en ? 'Drag to reposition your wallpaper image' : '拖动以调整壁纸中的图像位置'}/></div>
       <div className="compose-controls">
-        <div className="choice-block"><div className="choice-heading"><span>01</span><strong>{en ? 'Choose an image' : '选一张画'}</strong><small>{String(index + 1).padStart(2, '0')} / {paintings.length}</small></div><div ref={figureSelectorRef} className="figure-selector" role="group" aria-label={en ? 'Choose an image' : '选择一张画'}>{paintings.map((item, n) => <button key={item.id} type="button" className={index === n ? 'selected' : ''} onClick={() => setIndex(n)} aria-label={en ? `Image ${n + 1}` : `第 ${n + 1} 幅`} aria-pressed={index === n}><img decoding="async" src={source === 'character' ? publicAsset(`paintings/character-thumb/${encodeURIComponent(item.id)}.webp`) : item.thumbnail} onError={event => { if (source === 'character') event.currentTarget.src = publicAsset(`paintings/character/${encodeURIComponent(item.id)}.webp`) }} alt="" loading="lazy"/></button>)}</div></div>
-        <div className="choice-block"><div className="choice-heading"><span>02</span><strong>{en ? 'Which version?' : '用哪一种图像？'}</strong></div><div className="source-options" role="group" aria-label={en ? 'Choose image version' : '选择图像版本'}><button type="button" className={source === 'original' ? 'selected' : ''} aria-pressed={source === 'original'} onClick={() => setSource('original')}><img decoding="async" src={painting.thumbnail} alt=""/><span><strong>{en ? 'Original painting' : '原画'}</strong><small>{en ? 'Keep the painted textures' : '保留笔触与原有色彩'}</small></span></button><button type="button" className={source === 'character' ? 'selected' : ''} aria-pressed={source === 'character'} onClick={() => setSource('character')}><img decoding="async" src={painting.character} onError={event => { event.currentTarget.src = publicAsset(`paintings/character/${encodeURIComponent(painting.id)}.webp`) }} alt=""/><span><strong>{en ? 'Illustrated figure' : '插画角色'}</strong><small>{en ? 'A new form from the painting' : '让人物走出原画'}</small></span></button></div></div>
+        <div className="choice-block"><div className="choice-heading"><span>01</span><strong>{en ? 'Choose an image' : '选一张画'}</strong><small>{String(index + 1).padStart(2, '0')} / {paintings.length}</small></div><div ref={figureSelectorRef} className="figure-selector" role="group" aria-label={en ? 'Choose an image' : '选择一张画'}>{paintings.map((item, n) => <button key={item.id} type="button" className={index === n ? 'selected' : ''} onClick={() => setIndex(n)} aria-label={en ? `Image ${n + 1}` : `第 ${n + 1} 幅`} aria-pressed={index === n}><img decoding="async" src={source === 'character' ? publicAsset(`paintings/character-thumb/${encodeURIComponent(item.id)}.webp`) : item.thumbnail} onError={event => { event.currentTarget.onerror = null; if (source === 'character') event.currentTarget.src = item.character }} alt="" loading="lazy"/></button>)}</div></div>
+        <div className="choice-block"><div className="choice-heading"><span>02</span><strong>{en ? 'Which version?' : '用哪一种图像？'}</strong></div><div className="source-options" role="group" aria-label={en ? 'Choose image version' : '选择图像版本'}><button type="button" className={source === 'original' ? 'selected' : ''} aria-pressed={source === 'original'} onClick={() => setSource('original')}><img decoding="async" src={painting.thumbnail} alt=""/><span><strong>{en ? 'Original painting' : '原画'}</strong><small>{en ? 'Keep the painted textures' : '保留笔触与原有色彩'}</small></span></button><button type="button" className={source === 'character' ? 'selected' : ''} aria-pressed={source === 'character'} onClick={() => setSource('character')}><img decoding="async" src={painting.character} alt=""/><span><strong>{en ? 'Illustrated figure' : '插画角色'}</strong><small>{en ? 'A new form from the painting' : '让人物走出原画'}</small></span></button></div></div>
         <div className="choice-block"><div className="choice-heading"><span>03</span><strong>{en ? 'Build the composition' : '决定构图'}</strong></div><div className="layout-options" role="group" aria-label={en ? 'Choose composition' : '选择构图'}>{layouts.map(item => <button key={item.id} type="button" className={layout === item.id ? 'selected' : ''} aria-pressed={layout === item.id} onClick={() => setLayout(item.id)}><i className={`layout-mark layout-mark-${item.id}`} aria-hidden="true"/><strong>{en ? item.en : item.zh}</strong><small>{en ? item.enNote : item.zhNote}</small></button>)}</div></div>
         <div className="choice-block"><div className="choice-heading"><span>04</span><strong>{en ? 'Move the image' : '移动画面'}</strong></div><p className="placement-hint">{en ? 'Drag the preview to place the image. Fine-tune it below.' : '拖动预览调整位置，或用滑杆微调。'}</p><div className="placement-sliders"><label>{en ? 'Size' : '大小'}<input type="range" min="75" max="140" step="5" value={scale} onChange={event => setScale(Number(event.target.value))}/><output>{scale}%</output></label><label>{en ? 'Left · right' : '左右'}<input type="range" min="-100" max="100" step="5" value={positionX} onChange={event => setPositionX(Number(event.target.value))}/><output>{positionX > 0 ? '+' : ''}{positionX}</output></label><label>{en ? 'Up · down' : '上下'}<input type="range" min="-100" max="100" step="5" value={positionY} onChange={event => setPositionY(Number(event.target.value))}/><output>{positionY > 0 ? '+' : ''}{positionY}</output></label></div><button className="placement-reset" type="button" onClick={() => { setScale(100); setPositionX(0); setPositionY(0) }}>{en ? 'Reset image placement' : '重置图像位置'}</button></div>
         <div className="choice-block"><div className="choice-heading"><span>05</span><strong>{en ? 'Cloud rhythm' : '云的节奏'}</strong></div><div className="choice-chips">{clouds.map(item => <button key={item.id} type="button" className={cloud === item.id ? 'selected' : ''} aria-pressed={cloud === item.id} onClick={() => setCloud(item.id)}>{en ? item.en : item.zh}</button>)}</div></div>
         <div className="choice-block"><div className="choice-heading"><span>06</span><strong>{en ? 'Ground colour' : '底色'}</strong></div><div className="choice-chips colour-chips">{palettes.map(item => <button key={item.id} type="button" className={palette === item.id ? 'selected' : ''} aria-pressed={palette === item.id} onClick={() => setPalette(item.id)}><i className={`palette-dot ${item.id}`}/>{en ? item.en : item.zh}</button>)}</div></div>
-        {daily && <div className="choice-block blessing-choice"><div className="choice-heading"><span>07</span><strong>{en ? 'Today’s blessing' : '今日祝福'}</strong></div><label className="blessing-option"><input type="checkbox" checked={includeBlessing} onChange={event => setIncludeBlessing(event.target.checked)}/><span><strong>{en ? 'Add the blessing to my wallpaper' : '把今日抽到的祝福语放在壁纸上'}</strong><small>{en ? `From today’s card · No. ${String(daily.index).padStart(2, '0')}` : `来自今日卡片 · 第 ${String(daily.index).padStart(2, '0')} 幅`}</small></span></label>{includeBlessing && <blockquote className="blessing-choice-preview">“{blessing}”</blockquote>}</div>}
-        <div className="compose-actions"><button type="button" className="subtle-button" onClick={() => setArrangement(n => n + 1)}><RefreshCw size={16}/>{en ? 'Try another arrangement' : '再排一次'}</button><button type="button" className="paper-button" disabled={isSaving} onClick={() => void saveImage()}><Download size={16}/>{isSaving ? (en ? 'Preparing wallpaper…' : '正在制作壁纸…') : (en ? 'Save phone wallpaper' : '保存手机壁纸')}</button></div>
+        <div className="choice-block blessing-choice"><div className="choice-heading"><span>07</span><strong>{en ? 'Today’s blessing' : '今日祝福'}</strong></div><label className="blessing-option"><input type="checkbox" checked={includeBlessing} onChange={event => setIncludeBlessing(event.target.checked)}/><span><strong>{en ? 'Add the blessing to my wallpaper' : '把今日抽到的祝福语放在壁纸上'}</strong><small>{en ? `From today’s card · No. ${String(daily.index).padStart(2, '0')}` : `来自今日卡片 · 第 ${String(daily.index).padStart(2, '0')} 幅`}</small></span></label>{includeBlessing && <blockquote className="blessing-choice-preview">“{blessing}”</blockquote>}</div>
+        <div className="compose-actions"><button type="button" className="paper-button" onClick={() => setArrangement(n => n + 1)}><RefreshCw size={16}/>{en ? 'Try another arrangement' : '再排一次'}</button><button type="button" className="subtle-button" disabled={isSaving} onClick={() => void saveImage()}><Download size={16}/>{isSaving ? (en ? 'Preparing wallpaper…' : '正在制作壁纸…') : (en ? 'Save phone wallpaper' : '保存手机壁纸')}</button></div>
         {error && <p className="compose-error" role="alert">{error}</p>}
         <p className="wallpaper-hint">{en ? 'The preview matches your 1440 × 3120 PNG. Set it as your lock screen from Photos.' : '预览与 1440 × 3120 PNG 壁纸一致；下载后可从相册设为锁屏。'}</p>
         <p className="composition-note">{en ? 'A visual study made from the source image. It does not represent a historical painting or a newly identified figure.' : '这是基于原图的视觉练习，不代表新的历史画作或人物考证。'}</p>
       </div>
     </div>
-    {focusedClue && focusedReading && <div className="composition-from-detail"><DetailCrop painting={painting} clue={focusedClue} label={en ? `Selected detail from image ${painting.index}` : `第 ${painting.index} 幅的已选细节`}/><div><span className="overline">{en ? 'YOUR SELECTED DETAIL' : '从收藏的细节带来'}</span><strong>{focusedReading.title[en ? 'en' : 'zh']}</strong><p>{en ? 'This source detail stays in your wallpaper, whichever image version you choose.' : '无论选择原画还是插画角色，这个原画细节都会留在你的壁纸里。'}</p></div></div>}
+    {focusedClue && focusedReading && <div className="composition-from-detail"><DetailCrop painting={painting} clue={focusedClue} label={en ? `Selected detail from image ${painting.index}` : `第 ${painting.index} 幅的已选细节`}/><div><span className="overline">{en ? 'BROUGHT FROM YOUR PATH' : '从你的观看路径带来'}</span><strong>{focusedReading.title[en ? 'en' : 'zh']}</strong><p>{en ? 'This source detail stays in your wallpaper, whichever image version you choose.' : '无论选择原画还是插画角色，这个原画细节都会留在你的壁纸里。'}</p></div></div>}
   </section>
 }

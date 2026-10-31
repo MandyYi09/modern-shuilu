@@ -2,22 +2,20 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
-import { paintings } from '@/lib/paintings'
-import { dailyDrawDay, dailyDrawStorageKey } from '@/lib/dailyDraw'
+import { getDailyPainting } from '@/lib/paintings'
 import { getDetailComparisons } from '@/lib/detailComparisons'
 import { DrawPage } from './draw'
 
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => options,
-  Link: ({ params, search, children }: { params: { cardId: string }; search: { origin: string; detail: string }; children: ReactNode }) => <a href={`/card/${params.cardId}?origin=${search.origin}&detail=${search.detail}`}>{children}</a>,
+  Link: ({ params, search, children }: { params: { cardId: string }; search: { origin: string; detail: string }; children: ReactNode }) => <a href={`/card/${params.cardId}?detail=${search.detail}`}>{children}</a>,
 }))
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ i18n: { language: 'zh-TW' } }) }))
 beforeEach(() => { localStorage.clear(); vi.spyOn(window, 'scrollTo').mockImplementation(() => {}) })
 afterEach(() => { cleanup(); vi.restoreAllMocks() })
 
-it('restores the saved card, its on-card wish, matching exercise and source-detail continuation', async () => {
-  const painting = paintings[0]
-  localStorage.setItem(dailyDrawStorageKey, JSON.stringify({ day: dailyDrawDay(), paintingId: painting.id }))
+it('reveals the calendar-day card, its on-card wish, matching exercise and source-detail continuation', async () => {
+  const painting = getDailyPainting()
   const { container } = render(<DrawPage/>)
   expect(container.querySelector('.daily-card-back')).toBeTruthy()
   expect(container.querySelector('.daily-card-message')).toBeNull()
@@ -32,16 +30,14 @@ it('restores the saved card, its on-card wish, matching exercise and source-deta
   fireEvent.click(buttons[choices.findIndex(item => item.id !== painting.id)])
   expect(screen.getByText('再靠近一点，试试另一处。')).toBeTruthy()
   fireEvent.click(buttons[choices.findIndex(item => item.id === painting.id)])
-  fireEvent.click(screen.getByRole('button', { name: '揭晓对应原画' }))
-  expect(screen.getByRole('link', { name: /继续 · 查看原画详情/ }).getAttribute('href')).toBe(`/card/${painting.id}?origin=draw&detail=${focus}`)
+  fireEvent.click(screen.getByRole('button', { name: '打开它来自的原画' }))
+  expect(screen.getByRole('link', { name: /带着线索，走进原画/ }).getAttribute('href')).toBe(`/card/${painting.id}?detail=${focus}`)
   fireEvent.click(screen.getAllByRole('button', { name: '回到角色卡' })[0])
   expect(container.querySelector('.daily-card-message')?.textContent).toContain(painting.blessing.zh)
-  expect(JSON.parse(localStorage.getItem(dailyDrawStorageKey)!).paintingId).toBe(painting.id)
 })
 
- it('starts each new visit with the back and reveals the same saved daily card', async () => {
-  const painting = paintings[2]
-  localStorage.setItem(dailyDrawStorageKey, JSON.stringify({ day: dailyDrawDay(), paintingId: painting.id }))
+ it('starts each new visit with the back and reveals the same calendar-day card', async () => {
+  const painting = getDailyPainting()
   for (let visit = 0; visit < 2; visit++) {
     const { container, unmount } = render(<DrawPage/>)
     expect(container.querySelector('.daily-card-back')).toBeTruthy()
@@ -49,7 +45,6 @@ it('restores the saved card, its on-card wish, matching exercise and source-deta
     fireEvent.click(screen.getAllByRole('button', { name: '翻开今日卡片' })[0])
     await waitFor(() => expect(container.querySelector('.daily-card-character img')?.getAttribute('src')).toBe(painting.character))
     expect(container.querySelector('.draw-clue-choices')).toBeTruthy()
-    expect(JSON.parse(localStorage.getItem(dailyDrawStorageKey)!).paintingId).toBe(painting.id)
     unmount()
   }
 })

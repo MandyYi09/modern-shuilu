@@ -1,0 +1,9 @@
+The homepage carousel chooses 180px or 360px WebP derivatives on smaller displays and retains the original 720/733px artwork for larger or denser displays. Regenerate derivatives and the 640px cover cloud texture with Pillow: `python scripts/build_carousel_images.py`. Source/print artwork is unchanged.
+
+The shared carousel suspends its seven-second rotation and breathing animation when offscreen, when the tab is hidden, or when the portfolio lifecycle pauses it. Slide layers and stage containment bound rendering to the carousel. Existing keyboard, swipe, hover/focus and reduced-motion behavior remain available in the full application.
+
+`apps/web/preview.html` uses the same `carousel-artwork` and `carousel-motion` modules and styles, without loading React, the application router, account/composition/collection routes or release polling. `vite.config.cover.ts` produces a separate, relative-path `cover-dist` artifact. From the sibling portfolio, run `node scripts/sync-shuilu-cover.mjs` to build and copy only that artifact and its three responsive artwork families into the local portfolio. It does not deploy either site. Normal `pages:build` and publishing remain independent.
+
+The full homepage shows a nonblocking progress bar while its three characters decode. The portfolio cover reports decoded-image counts to the gallery's existing progress bar and keeps the fallback screenshot visible until a complete frame has painted. These counts describe image readiness, not downloaded bytes.
+
+The cover disables the stage's ancestor masks and pre-bakes Doumu's soft crop into cover-only WebP derivatives. Only the artwork transforms animate; cropped moving layers no longer require repeated mask composition. Original website and print images are preserved. Test the full portfolio row with its adjacent 2D and 3D covers as well as the isolated cover.

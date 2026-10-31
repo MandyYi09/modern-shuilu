@@ -41,6 +41,29 @@ export const paintings: Painting[] = paintingFiles.map((id, index) => ({
 
 export function getPainting(id: string) { return paintings.find((painting) => painting.id === (id === '5699' ? '5697 2' : id)) }
 
+// Each unique painting appears once per shuffled cycle, including the hidden card.
+const dailyOrder = (() => {
+  const order = paintings.map((_, index) => index)
+  let seed = 4
+  for (let index = order.length - 1; index > 0; index--) {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0
+    const other = seed % (index + 1)
+    ;[order[index], order[other]] = [order[other], order[index]]
+  }
+  return order
+})()
+
+export function getDailyPainting(date = new Date()) {
+  const localDay = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date)
+  const [year, month, day] = localDay.split('-').map(Number)
+  const calendarDay = Math.floor(Date.UTC(year, month - 1, day) / 86_400_000)
+  // Anchor the expanded cycle to the previously shown card on 2026-10-08.
+  const anchorDay = Math.floor(Date.UTC(2026, 9, 8) / 86_400_000)
+  const anchorPosition = dailyOrder.indexOf(paintings.findIndex(painting => painting.id === '5692'))
+  const cyclePosition = (((calendarDay - anchorDay + anchorPosition) % dailyOrder.length) + dailyOrder.length) % dailyOrder.length
+  return paintings[dailyOrder[cyclePosition]]
+}
+
 const discoveredKey = 'shuilu-discovered-v1'
 export function getDiscovered(): string[] {
   try { return [...new Set((JSON.parse(readStoredValue(discoveredKey, 'collection') || '[]') as string[]).map(id => id === '5699' ? '5697 2' : id))] } catch { return [] }

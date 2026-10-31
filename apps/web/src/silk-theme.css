@@ -266,6 +266,11 @@ html { scroll-behavior:auto; }
 .image-unavailable { display:grid; place-items:center; height:100%; padding:8px; font-size:11px; }
 .painted-guardian { animation:guardian-breathe 7s ease-in-out infinite; animation-play-state:paused; }
 .painted-guardian.is-moving { animation-play-state:running; }
+.guardian-stage { contain:layout paint style; }
+.guardian-slide { will-change:transform; }
+.painted-guardian.is-moving { will-change:transform; }
+.carousel-loading { position:absolute;z-index:5;left:30%;right:30%;bottom:14px;display:grid;gap:5px;text-align:center;font:11px Georgia,serif;color:var(--ink);pointer-events:none; }
+.carousel-loading progress { width:100%;height:3px;accent-color:var(--jade); }
 @keyframes guardian-breathe { 0%,100% { transform:translateY(0) rotate(-.5deg); } 50% { transform:translateY(-5px) rotate(.5deg); } }
 @media(prefers-reduced-motion:reduce) { .painted-guardian { animation:none; } }
 
@@ -300,6 +305,11 @@ html { scroll-behavior:auto; }
 .gallery-cloud-court .guardian-slide.is-previous { transform:translateX(-67%) scale(.83); opacity:.83; z-index:1; }
 .gallery-cloud-court .guardian-slide.is-next { transform:translateX(67%) scale(.83); opacity:.83; z-index:1; }
 .gallery-cloud-court .guardian-character { width:auto; max-width:100%; height:90%; min-height:0; align-self:center; object-fit:contain; }
+/* Doumu's current illustration includes clouds; soften its edges into the stage. */
+.gallery-cloud-court .guardian-character-doumu {
+  mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent),linear-gradient(transparent,#000 7%,#000 90%,transparent);
+  mask-composite:intersect;
+}
 .gallery-cloud-court .carousel-controls { position:relative; left:auto; bottom:auto; transform:none; justify-content:center; margin:-6px auto 0; padding:6px 14px; gap:12px; border-radius:0; background:transparent; }
 .gallery-cloud-court .carousel-arrow,.gallery-cloud-court .carousel-play { width:40px; height:40px; border:0; border-radius:0; }
 .gallery-cloud-court .carousel-play { border-left:1px solid #b1a57570; margin-left:8px; padding-left:12px; width:48px; }
@@ -376,136 +386,3 @@ html:not([lang='en']) .home-feature-actions .art-ticket { font-style:normal; fon
   mask-composite:intersect;
 }
 .page-hem svg { opacity:.28; }
-
-/* A single forward action; optional activities stay quiet until requested. */
-.journey-progress { display: flex; justify-content: center; gap: clamp(.75rem, 3vw, 2rem); list-style: none; padding: 0; margin: 0 auto 2rem; }
-.journey-progress li { display: flex; align-items: center; gap: .5rem; opacity: .55; font-size: .85rem; }
-.journey-progress li[aria-current="step"] { opacity: 1; font-weight: 700; }
-.journey-progress li span { display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border: 1px solid currentColor; border-radius: 50%; flex-shrink: 0; }
-.journey-disclosure > summary { cursor: pointer; padding: 1rem 0; line-height: 1.6; font-size: .9rem; }
-.journey-disclosure > summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
-.journey-extras { margin-top: 2rem; border-top: 1px solid #8e775c40; }
-.journey-extras > p, .save-location { font-size: .8rem; line-height: 1.7; opacity: .75; }
-.journey-extra-links { display: flex; flex-wrap: wrap; gap: 1rem 2rem; font-size: .9rem; }
-.detail-keep-row { flex-wrap: wrap; }
-.path-stop-actions { align-items: flex-start; }
-.saved-more > summary { padding: 0; }
-.saved-more[open] { display: flex; flex-direction: column; }
-.saved-more[open] > a, .saved-more[open] > button { display: block; margin-top: 1rem; }
-.compose-actions { align-items: center; }
-@media (max-width: 540px) {
-  .journey-progress { gap: .6rem; }
-  .journey-progress li { font-size: .72rem; gap: .3rem; }
-  .journey-progress li span { width: 1.35rem; height: 1.35rem; }
-}
-.home-feature-actions { grid-template-columns: 1fr; max-width: 340px; background: #254b3b; }
-.painting-next .paper-button { display: inline-flex; align-items: center; gap: .75rem; }
-
-/* Daily draw is a complete encounter; close looking belongs in the atlas. */
-.daily-encounter { padding-bottom: 36px; }
-.daily-encounter .feature-heading { align-items: baseline; flex-wrap: wrap; gap: 10px 24px; margin-bottom: 24px; }
-.daily-encounter .draw-workspace { max-width: 1000px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(32px, 6vw, 90px); }
-.daily-encounter .draw-card-column { position: static; padding: 0; background: transparent; }
-.daily-sealed-card, .daily-revealed-card { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: clamp(260px, calc(100dvh - var(--navigation-height, 100px) - 180px), 570px); margin: 0; padding: 0; border: 0; background: transparent; }
-.daily-sealed-card { cursor: pointer; }
-.daily-sealed-card img, .daily-revealed-card img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
-.daily-revealed-card { padding: 18px; border: 1px solid #ad9c7659; border-radius: 12px; background: #faf6ec; box-shadow: 8px 12px 30px #314a4315; }
-.daily-revealed-card figcaption { flex-shrink: 0; margin-top: 12px; font-size: 11px; letter-spacing: .1em; }
-.daily-wish { margin: 24px 0; padding: 20px 0; border-block: 1px solid #8e775c40; }
-.daily-wish p { margin: 12px 0 0; font-size: 20px; }
-.daily-encounter .draw-side .daily-atlas-note { font-size: 12px; margin-bottom: 0; }
-.detail-match-character { display: block; height: 220px; width: 100%; object-fit: contain; }
-@media(max-width:700px) {
-  .daily-encounter .draw-workspace { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  .daily-sealed-card, .daily-revealed-card { height: clamp(240px, 43dvh, 390px); max-width: 290px; }
-  .daily-encounter .draw-side { padding-top: 20px; }
-}
-
-/* Give the figures air around them and let the scene follow a drag. */
-.gallery-cloud-court { width: 100%; max-width: 1320px; }
-.gallery-cloud-court .guardian-stage { height: clamp(380px, calc(100svh - 280px), 660px); cursor: grab; user-select: none; touch-action: pan-y; }
-.gallery-cloud-court .guardian-stage.is-dragging { cursor: grabbing; }
-.gallery-cloud-court .guardian-character { height: 76%; max-width: 88%; }
-.guardian-drag-track { position: absolute; inset: 0; transition: transform .4s ease-out; }
-.is-dragging .guardian-drag-track { transition: none; }
-.guardian-ripple { position: absolute; z-index: 5; width: 14px; height: 14px; pointer-events: none; border: 1px solid #fff9e8d9; border-radius: 50%; box-shadow: 0 0 0 2px #648e8233, 0 0 14px #fff9e888; animation: guardian-ripple .9s ease-out forwards; }
-.guardian-ripple i { position: absolute; inset: -12px; border: 1px solid #f8fff5b3; border-radius: 50%; }
-.guardian-ripple i:nth-child(2) { inset: -24px; border-color: #7ba79870; }
-.guardian-ripple i:nth-child(3) { inset: -34px; border-style: dashed; border-color: #f8fff580; }
-@keyframes guardian-ripple { from { opacity: .95; transform: translate(-50%, -50%) scale(.15); } to { opacity: 0; transform: translate(-50%, -50%) scale(2); } }
-@media(max-width:767px) {
-  .gallery-cloud-court .guardian-stage { height: clamp(350px, calc(100svh - 380px), 460px); }
-  .gallery-cloud-court .guardian-character { height: 74%; max-width: 85%; }
-}
-@media(prefers-reduced-motion:reduce) { .guardian-drag-track { transition: none; } .guardian-ripple { display: none; } }
-
-/* Hidden editions lead the cast; the artwork keeps its original colours. */
-.gallery-cloud-court .guardian-slide.is-secret-edition.is-active::before { content: ''; position: absolute; width: 110%; height: 82%; left: -5%; top: 9%; z-index: -1; border-radius: 50%; background: radial-gradient(ellipse, #e5cd8555, #f5e6b323 55%, transparent 72%); pointer-events: none; }
-
-.gallery-cloud-court .guardian-stage { cursor: default; }
-.gallery-cloud-court .guardian-stage.is-over-figure { cursor: grab; }
-.gallery-cloud-court .guardian-stage.is-dragging { cursor: grabbing; }
-
-/* Keep the whole source and adaptation together, with optional detail pairs. */
-.painting-comparison-layout { grid-template-columns: minmax(0, 1.35fr) minmax(320px, .85fr); gap: clamp(28px, 4vw, 64px); }
-.painting-comparison-layout > .painting-view { width: 100%; }
-.source-character-comparison { width: 100%; }
-.source-character-pair { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 20px; }
-.source-character-comparison figure { min-width: 0; margin: 0; }
-.source-character-comparison figcaption { margin: 0 0 12px; font-size: 13px; color: #3b5a50; line-height: 1.5; }
-.comparison-image { height: clamp(280px, calc(100dvh - var(--navigation-height, 100px) - 155px), 600px); padding: 12px; background: #f8f4e9b3; border: 1px solid #9aab9a55; }
-.comparison-character .comparison-image { background: #dce6dd55; border-color: transparent; }
-.comparison-image > img, .comparison-detail-image > img { width: 100%; height: 100%; object-fit: contain; }
-.has-selected-detail .comparison-image { height: clamp(200px, 34dvh, 340px); }
-.source-character-details { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid #9aab9a66; margin-top: 20px; padding-top: 16px; }
-.comparison-detail-image { height: clamp(130px, 20dvh, 210px); padding: 8px; background: #f8f4e9b3; }
-.painting-notes .painting-identity h1 { margin: 8px 0 18px; font: 500 clamp(24px, 2.1vw, 32px)/1.35 Georgia, 'Noto Serif TC', serif; overflow-wrap: anywhere; }
-.painting-notes .painting-identity { padding-top: 16px; }
-.painting-notes .painting-identity .identity-date, .painting-notes .painting-identity .identity-source { font-size: 13px; line-height: 1.7; }
-.painting-notes h2.detail-title { font-size: 23px; margin: 26px 0 14px; }
-.painting-notes .clue-list { display: flex; flex-wrap: wrap; gap: 8px; }
-.painting-notes .clue-list button { width: auto; flex: 1; min-width: 100px; padding: 12px 10px; border: 1px solid #9aab9a77; font-size: 14px; justify-content: space-between; gap: 8px; }
-.painting-notes .clue-list button.active { background: #d5e1d4; border-color: #6b8775; }
-.sheet-identity strong { line-height: 1.5; }
-.sheet-identity small { line-height: 1.6; }
-@media(max-width:800px) {
-  .painting-comparison-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
-  .painting-comparison-layout > .painting-view { position: static; background: transparent; padding: 0; z-index: auto; }
-  .source-character-pair { gap: 12px; }
-  .comparison-image, .has-selected-detail .comparison-image { height: clamp(240px, 45dvh, 400px); padding: 6px; }
-  .source-character-details { gap: 12px; }
-  .comparison-detail-image { height: 180px; }
-  .navigation-en .page-dock { gap: clamp(8px, 3vw, 24px); }
-  .navigation-en .page-dock-link { font-size: clamp(15px, 3.9vw, 20px); }
-}
-.painting-next a.paper-button { color: #fffaf0; }
-.comparison-mobile-controls { display: none; }
-@media(max-width:800px) {
-  .comparison-mobile-controls { display: flex; gap: 8px; margin-top: 20px; }
-  .comparison-mobile-controls button { flex: 1; padding: 12px 6px; border: 1px solid #9aab9a77; background: transparent; color: #254b3b; font-size: 13px; }
-  .comparison-mobile-controls button[aria-pressed=true] { background: #d5e1d4; border-color: #6b8775; }
-  .painting-comparison-layout .painting-notes > .detail-title, .painting-comparison-layout .painting-notes > .clue-list { display: none; }
-}
-
-/* Ruyi cloud with a pale-gold crest blending into mist jade. */
-.home-feature-actions { width: min(100%, 440px); max-width: 440px; margin: 14px auto 24px; overflow: visible; border: 0; border-radius: 0; background: none; box-shadow: none; }
-.home-feature-actions .art-ticket { min-height: 150px; padding: 48px 70px; color: #34574d; font-size: 18px; background: none; isolation: isolate; }
-.home-feature-actions .cloud-ribbon-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: -1; pointer-events: none; filter: drop-shadow(0 4px 3px #536f5814); transition: transform .25s ease, filter .25s ease; }
-.home-feature-actions .art-ticket > span { position: relative; line-height: 1.4; transform: translateY(3px); }
-.home-feature-actions .art-ticket:hover { background: none; }
-.home-feature-actions .art-ticket:hover .cloud-ribbon-art { transform: translateY(-2px); filter: drop-shadow(0 6px 5px #536f5826); }
-.home-feature-actions .art-ticket:focus-visible { outline: 2px solid #8b754c; outline-offset: 3px; border-radius: 45%; }
-@media(max-width:600px) {
-  .home-feature-actions .art-ticket { min-height: 120px; padding: 38px 54px; font-size: 15px; }
-  html:not([lang='en']) .home-feature-actions .art-ticket { font-size: 15px; letter-spacing: .06em; }
-}
-@media(prefers-reduced-motion:reduce) { .home-feature-actions .cloud-ribbon-art { transition: none; } .home-feature-actions .art-ticket:hover .cloud-ribbon-art { transform: none; } }
-
-/* Keep the restored wish on the card itself, including narrow screens. */
-@media (max-width: 800px) {
-  .restored-draw-journey .draw-card-column { position: relative; top: auto; z-index: auto; background: transparent; }
-  .restored-draw-journey .draw-card-column .daily-card { width: min(100%, 300px); height: auto; max-height: none; }
-  .restored-draw-journey .draw-card-column .daily-card-character img { top: 7%; left: 8%; width: 84%; height: 66%; }
-  .restored-draw-journey .draw-card-column .daily-card-message { display: flex; }
-  .restored-draw-journey .mobile-card-blessing { display: none; }
-}
