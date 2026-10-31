@@ -1,6 +1,6 @@
 # Canonical project
 
-This repository is the source of truth for Modern Shuilu. The desktop zhong-art folder is a symbolic link to this checkout; it is not a second copy.
+This repository is the source of truth for Modern Shuilu. The desktop modern-shuilu folder is a symbolic link to this checkout; it is not a second copy.
 
 Publish changes by committing and pushing main, checking the Publish website workflow for that exact commit, and opening https://mandyyi09.github.io/modern-shuilu/.
 
