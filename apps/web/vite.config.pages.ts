@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { pagesEntry } from '../../scripts/pages-entry.mjs'
 
 export default defineConfig({
-  base: '/zhong-art/',
+  base: '/modern-shuilu/',
   plugins: [react(), pagesEntry()],
   resolve: { tsconfigPaths: true },
   build: { outDir: '../../pages-dist', emptyOutDir: true },

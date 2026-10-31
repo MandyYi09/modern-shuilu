@@ -66,7 +66,7 @@ function SiteIntroduction({ en, onClose }: { en: boolean; onClose: () => void })
   }, [])
   return <dialog ref={dialog} className="site-introduction" aria-labelledby="site-introduction-title" onCancel={event => { event.preventDefault(); onClose() }} onClick={event => { if (event.target === event.currentTarget) { const r = event.currentTarget.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) onClose() } }}>
     <button type="button" className="intro-close" onClick={onClose} aria-label={en ? 'Close introduction' : '关闭介绍'}>×</button>
-    <span className="overline">MODERN SHUILU</span>
+    <span className="overline">Modern Shuilu</span>
     <h2 id="site-introduction-title">{en ? 'A small discovery in an old painting.' : '从一张卡，走近一幅画。'}</h2>
     <p>{en ? 'Shuilu paintings are used in Buddhist Shuilu rituals and depict deities and people from many walks of life. Here, illustrated characters and small details offer an easy way into these paintings—no art history knowledge needed.' : '水陆画是寺庙举行水陆法会时使用的绘画，画中既有神佛，也有世间百态。这里用插画角色和画中细节，带你轻松走近这些古画，无需古画知识。'}</p>
     <ul>

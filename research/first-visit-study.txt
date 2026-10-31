@@ -1,7 +1,7 @@
 MODERN SHUILU — FIRST-VISIT USABILITY STUDY
 Status: planned; no participant sessions or findings recorded yet.
 Purpose: assess whether a first-time visitor can connect a contemporary character to its source painting and explain one visual detail.
-Site: https://mandyyi09.github.io/zhong-art/
+Site: https://mandyyi09.github.io/modern-shuilu/
 
 PARTICIPANTS / 参与者
 Suggested initial round: 3 Chinese-interface users and 3 English-interface users.

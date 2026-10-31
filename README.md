@@ -1,11 +1,11 @@
 # Modern Shuilu integrated stack
 
-The project name is **Modern Shuilu** in both languages. The existing `zhong-art` repository URL, local folder, authentication realm, database identifiers, and browser-storage keys are retained for compatibility; they are infrastructure identifiers, not the project’s display name.
+The project name is **Modern Shuilu** in both languages. The GitHub repository and public website use `modern-shuilu`. The existing local checkout path, authentication realm, database identifiers, and browser-storage keys are retained for compatibility; they are internal identifiers, not the project’s display name.
 
 ## Public website preview
 
 The public website can be published to GitHub Pages at
-`https://mandyyi09.github.io/zhong-art/`. It includes the home page, daily
+`https://mandyyi09.github.io/modern-shuilu/`. It includes the home page, daily
 draw, painting atlas and details, viewing path, and wallpaper composition.
 These pages use local artwork and browser storage, so no server is required
 for the public preview.

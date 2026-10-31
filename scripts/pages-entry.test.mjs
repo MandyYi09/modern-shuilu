@@ -35,16 +35,16 @@ async function browser(responses) {
     },
   }
   vm.createContext(context)
-  await vm.runInContext(`(${loadLatestRelease.toString()})(${JSON.stringify(old)}, '/zhong-art/')`, context)
+  await vm.runInContext(`(${loadLatestRelease.toString()})(${JSON.stringify(old)}, '/modern-shuilu/')`, context)
   return { context, handlers, elements, requests, state, stored }
 }
 
 test('a cached HTML document loads the newest script and stylesheet without changing the address', async () => {
   const page = await browser([next])
-  assert.equal(page.elements[0].href, 'https://example.test/zhong-art/assets/new.css')
-  assert.equal(page.elements[1].src, 'https://example.test/zhong-art/assets/new.js')
+  assert.equal(page.elements[0].href, 'https://example.test/modern-shuilu/assets/new.css')
+  assert.equal(page.elements[1].src, 'https://example.test/modern-shuilu/assets/new.js')
   assert.equal(page.requests[0].options.cache, 'no-store')
-  assert.equal(page.requests[0].url.pathname, '/zhong-art/version.json')
+  assert.equal(page.requests[0].url.pathname, '/modern-shuilu/version.json')
   assert.ok(page.requests[0].url.searchParams.has('_'))
   assert.equal(page.state.reloads, 0)
 })
@@ -52,14 +52,14 @@ test('a cached HTML document loads the newest script and stylesheet without chan
 test('network failures and malformed manifests fall back to the build in the document', async () => {
   for (const response of [new Error('offline'), { ...next, entry: 'https://other.test/app.js' }]) {
     const page = await browser([response])
-    assert.equal(page.elements[1].src, 'https://example.test/zhong-art/assets/old.js')
+    assert.equal(page.elements[1].src, 'https://example.test/modern-shuilu/assets/old.js')
   }
 })
 
 test('a partially propagated asset falls back and only reloads once for the same release', async () => {
   const page = await browser([next, next, next])
   page.elements[1].onerror()
-  assert.equal(page.elements.at(-1).src, 'https://example.test/zhong-art/assets/old.js')
+  assert.equal(page.elements.at(-1).src, 'https://example.test/modern-shuilu/assets/old.js')
   await page.handlers.focus()
   await page.handlers.interval()
   assert.equal(page.state.reloads, 1)
@@ -88,22 +88,22 @@ test('background tabs, offline users, and users entering text are left undisturb
 })
 
 test('build output keeps fonts and replaces stale entry and CSS tags with the version loader', () => {
-  const html = '<head><script type="module" crossorigin src="/zhong-art/assets/old.js"></script><link rel="stylesheet" crossorigin href="/zhong-art/assets/old.css"><link href="https://fonts.googleapis.com/css2" rel="stylesheet"></head>'
-  const result = versionedHtml(html, 'old', '/zhong-art/')
+  const html = '<head><script type="module" crossorigin src="/modern-shuilu/assets/old.js"></script><link rel="stylesheet" crossorigin href="/modern-shuilu/assets/old.css"><link href="https://fonts.googleapis.com/css2" rel="stylesheet"></head>'
+  const result = versionedHtml(html, 'old', '/modern-shuilu/')
   assert.deepEqual(result.release, old)
   assert.ok(result.html.includes('data-release-loader'))
   assert.ok(result.html.includes('https://fonts.googleapis.com/css2'))
-  assert.ok(!result.html.includes('src="/zhong-art/assets/old.js"'))
-  assert.ok(result.html.includes('rel="preload" as="style" href="/zhong-art/assets/old.css"'))
-  assert.ok(result.html.includes('rel="modulepreload" href="/zhong-art/assets/old.js"'))
-  assert.throws(() => versionedHtml('<head></head>', 'old', '/zhong-art/'))
+  assert.ok(!result.html.includes('src="/modern-shuilu/assets/old.js"'))
+  assert.ok(result.html.includes('rel="preload" as="style" href="/modern-shuilu/assets/old.css"'))
+  assert.ok(result.html.includes('rel="modulepreload" href="/modern-shuilu/assets/old.js"'))
+  assert.throws(() => versionedHtml('<head></head>', 'old', '/modern-shuilu/'))
 })
 
 
 test('a stalled version check mounts the fallback within the startup budget', async () => {
   const start = Date.now()
   const page = await browser([new Promise(() => {})])
-  assert.equal(page.elements.at(-1).src, 'https://example.test/zhong-art/assets/old.js')
+  assert.equal(page.elements.at(-1).src, 'https://example.test/modern-shuilu/assets/old.js')
   assert.ok(Date.now() - start < 500, 'startup must not wait for the five-second network timeout')
 })
 
@@ -114,5 +114,5 @@ test('a late manifest does not mount a second application', async () => {
   resolve(next)
   await new Promise(done => setTimeout(done, 0))
   assert.equal(page.elements.filter(element => element.tag === 'script').length, 1)
-  assert.equal(page.elements.at(-1).src, 'https://example.test/zhong-art/assets/old.js')
+  assert.equal(page.elements.at(-1).src, 'https://example.test/modern-shuilu/assets/old.js')
 })
