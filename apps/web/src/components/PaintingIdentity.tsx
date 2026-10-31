@@ -5,7 +5,7 @@ export function PaintingIdentity({ painting, en = false }: { painting: Painting;
   const language = en ? 'en' : 'zh'
   return <section className="painting-identity" aria-label={en ? 'Figure and source date' : '人物与原画年代'}>
     <span className="overline">{en ? 'FIGURE / SOURCE' : '人物 / 原画资料'}</span>
-    <h2>{identity.name[language]}</h2>
+    <h1>{identity.name[language]}</h1>
     {identity.date[language] && <p className="identity-date"><strong>{en ? 'Source artwork: ' : '原画版本：'}</strong>{identity.date[language]}</p>}
     {identity.source[language] && <p className="identity-source"><strong>{en ? 'Source: ' : '出处：'}</strong>{identity.source[language]}</p>}
     {(identity.catalogueUrl || identity.facsimileUrl) && <details><summary>{en ? 'Source and dating notes' : '查看出处与年代说明'}</summary>
