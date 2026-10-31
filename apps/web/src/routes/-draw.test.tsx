@@ -1,14 +1,16 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import type { ReactNode } from 'react'
+import { lazy, Suspense, type ComponentType, type ReactNode } from 'react'
 import { paintings } from '@/lib/paintings'
 import { dailyDrawDay, dailyDrawStorageKey } from '@/lib/dailyDraw'
 import { getDetailComparisons } from '@/lib/detailComparisons'
-import { DrawPage } from './draw'
+import { Route } from './draw'
+const DrawPage = Route.options.component as ComponentType
 
 vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (options: unknown) => options,
+  lazyRouteComponent: (load: () => Promise<Record<string, ComponentType>>, name: string) => lazy(async () => ({ default: (await load())[name] })),
+  createFileRoute: () => (options: unknown) => ({ options }),
   Link: ({ params, search, children }: { params: { cardId: string }; search: { origin: string; detail: string }; children: ReactNode }) => <a href={`/card/${params.cardId}?origin=${search.origin}&detail=${search.detail}`}>{children}</a>,
 }))
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ i18n: { language: 'zh-TW' } }) }))
@@ -18,7 +20,8 @@ afterEach(() => { cleanup(); vi.restoreAllMocks() })
 it('restores the saved card, its on-card wish, matching exercise and source-detail continuation', async () => {
   const painting = paintings[0]
   localStorage.setItem(dailyDrawStorageKey, JSON.stringify({ day: dailyDrawDay(), paintingId: painting.id }))
-  const { container } = render(<DrawPage/>)
+  const { container } = render(<Suspense><DrawPage/></Suspense>)
+  await screen.findAllByRole('button', { name: '翻开今日卡片' })
   expect(container.querySelector('.daily-card-back')).toBeTruthy()
   expect(container.querySelector('.daily-card-message')).toBeNull()
   fireEvent.click(screen.getAllByRole('button', { name: '翻开今日卡片' })[0])
@@ -43,8 +46,9 @@ it('restores the saved card, its on-card wish, matching exercise and source-deta
   const painting = paintings[2]
   localStorage.setItem(dailyDrawStorageKey, JSON.stringify({ day: dailyDrawDay(), paintingId: painting.id }))
   for (let visit = 0; visit < 2; visit++) {
-    const { container, unmount } = render(<DrawPage/>)
-    expect(container.querySelector('.daily-card-back')).toBeTruthy()
+    const { container, unmount } = render(<Suspense><DrawPage/></Suspense>)
+    await screen.findAllByRole('button', { name: '翻开今日卡片' })
+  expect(container.querySelector('.daily-card-back')).toBeTruthy()
     expect(container.querySelector('.draw-clue-choices')).toBeNull()
     fireEvent.click(screen.getAllByRole('button', { name: '翻开今日卡片' })[0])
     await waitFor(() => expect(container.querySelector('.daily-card-character img')?.getAttribute('src')).toBe(painting.character))

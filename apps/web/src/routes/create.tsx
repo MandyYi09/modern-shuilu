@@ -58,6 +58,7 @@ function CreatePage() {
   const focusedClue = from === painting.id && focus ? focus : null
   const focusedReading = focusedClue ? clueReadings[paintingClues[painting.id][focusedClue].motif] : null
   const previewRef = useRef<HTMLCanvasElement>(null)
+  const previewFrame = useRef<HTMLCanvasElement | null>(null)
   const figureSelectorRef = useRef<HTMLDivElement>(null)
   const dragRef = useRef<{ x: number; y: number; positionX: number; positionY: number } | null>(null)
 
@@ -82,8 +83,12 @@ function CreatePage() {
     const controller = new AbortController()
     const preview = previewRef.current
     if (!preview) return
-    const frame = document.createElement('canvas')
-    frame.width = 480; frame.height = 1040
+    // Reuse the offscreen buffer while dragging; output pixels and export size stay unchanged.
+    if (!previewFrame.current) {
+      previewFrame.current = document.createElement('canvas')
+      previewFrame.current.width = 480; previewFrame.current.height = 1040
+    }
+    const frame = previewFrame.current
     const scheduled = requestAnimationFrame(() => { void (async () => {
       if (includeBlessing && !en) await document.fonts.load('66px "Noto Serif TC"', blessing).catch(() => [])
       await renderWallpaper(frame, painting, options, { preview: true, signal: controller.signal })

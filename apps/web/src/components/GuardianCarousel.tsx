@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getPainting, paintings } from '@/lib/paintings'
 import { publicAsset } from '@/lib/assets'
+import { hitsCharacter, warmCharacterMask } from '@/lib/character-hit-test'
 
 // Open with the three favourites together. Starting at index 1 spotlights
 // the two secret editions consecutively, then continues through the atlas.
@@ -27,31 +28,6 @@ const labels = {
   en: { carousel: 'carousel', slide: 'slide', title: 'THE CLOUD COURT', inscription: 'CLOUDS RISE · ALL THINGS AWAKEN', names: ['Figure I', 'Figure II', 'Figure III'], elements: ['Look at the face', 'Look at the robe', 'Look at the object'], previous: 'Previous figure', next: 'Next figure', pause: 'Pause carousel', play: 'Play carousel', hint: 'Old brushstrokes in motion.' },
 }
 
-// Hit-test the displayed alpha so transparent margins do not start a drag.
-const characterPixels = new WeakMap<HTMLImageElement, ImageData>()
-function hitsCharacter(image: HTMLImageElement, clientX: number, clientY: number) {
-  if (!image.complete || !image.naturalWidth) return false
-  const bounds = image.getBoundingClientRect()
-  const scale = Math.min(bounds.width / image.naturalWidth, bounds.height / image.naturalHeight)
-  if (!scale) return false
-  const x = Math.floor((clientX - bounds.left - (bounds.width - image.naturalWidth * scale) / 2) / scale)
-  const y = Math.floor((clientY - bounds.top - (bounds.height - image.naturalHeight * scale) / 2) / scale)
-  if (x < 0 || y < 0 || x >= image.naturalWidth || y >= image.naturalHeight) return false
-  let pixels = characterPixels.get(image)
-  if (!pixels) {
-    const canvas = document.createElement('canvas')
-    canvas.width = image.naturalWidth
-    canvas.height = image.naturalHeight
-    const context = canvas.getContext('2d', { willReadFrequently: true })
-    if (!context) return false
-    try {
-      context.drawImage(image, 0, 0)
-      pixels = context.getImageData(0, 0, canvas.width, canvas.height)
-      characterPixels.set(image, pixels)
-    } catch { return false }
-  }
-  return pixels.data[(y * pixels.width + x) * 4 + 3] > 32
-}
 function hitsAnyCharacter(stage: HTMLDivElement, x: number, y: number) {
   return Array.from(stage.querySelectorAll<HTMLImageElement>('.guardian-character')).some(image => hitsCharacter(image, x, y))
 }
@@ -81,6 +57,22 @@ export function GuardianCarousel() {
   const drag = useRef<{ id: number; x: number; y: number } | null>(null)
   const track = useRef<HTMLDivElement>(null)
   const dragFrame = useRef<number | null>(null)
+  const hoverFrame = useRef<number | null>(null)
+  const hoverPoint = useRef<{ stage: HTMLDivElement; x: number; y: number } | null>(null)
+  const cancelHover = () => {
+    if (hoverFrame.current !== null) cancelAnimationFrame(hoverFrame.current)
+    hoverFrame.current = null
+    hoverPoint.current = null
+  }
+  const checkHover = (stage: HTMLDivElement, x: number, y: number) => {
+    hoverPoint.current = { stage, x, y }
+    if (hoverFrame.current !== null) return
+    hoverFrame.current = requestAnimationFrame(() => {
+      hoverFrame.current = null
+      const point = hoverPoint.current
+      if (point) setHoveringFigure(hitsAnyCharacter(point.stage, point.x, point.y))
+    })
+  }
   const dragOffset = useRef(0)
   const setDragX = (offset: number) => {
     dragOffset.current = offset
@@ -90,7 +82,10 @@ export function GuardianCarousel() {
       if (track.current) track.current.style.transform = `translateX(${dragOffset.current}px)`
     })
   }
-  useEffect(() => () => { if (dragFrame.current !== null) cancelAnimationFrame(dragFrame.current) }, [])
+  useEffect(() => () => {
+    if (dragFrame.current !== null) cancelAnimationFrame(dragFrame.current)
+    cancelHover()
+  }, [])
   const [pagePaused, setPagePaused] = useState(false)
   useEffect(() => {
     const update = () => setPagePaused(document.hidden || document.documentElement.hasAttribute('data-preview-paused'))
@@ -139,16 +134,17 @@ export function GuardianCarousel() {
     onFocusCapture={() => setInteracting(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false) }}
     onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1) } }}>
     <div className={`guardian-stage${dragging ? ' is-dragging' : ''}${hoveringFigure ? ' is-over-figure' : ''}`}
-      onPointerLeave={() => setHoveringFigure(false)}
+      onPointerLeave={() => { cancelHover(); setHoveringFigure(false) }}
       onPointerDown={event => {
         if (!event.isPrimary || event.button !== 0 || !hitsAnyCharacter(event.currentTarget, event.clientX, event.clientY)) return
+        cancelHover()
         drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY }
         event.currentTarget.setPointerCapture(event.pointerId)
         setDragging(true)
       }}
       onPointerMove={event => {
         const start = drag.current
-        if (!start && event.pointerType === 'mouse') setHoveringFigure(hitsAnyCharacter(event.currentTarget, event.clientX, event.clientY))
+        if (!start && event.pointerType === 'mouse') checkHover(event.currentTarget, event.clientX, event.clientY)
         if (start?.id === event.pointerId) {
           const x = event.clientX - start.x
           const y = event.clientY - start.y
@@ -167,7 +163,7 @@ export function GuardianCarousel() {
         const offset = (index - active + guardians.length) % guardians.length
         if (offset !== 0 && offset !== 1 && offset !== guardians.length - 1) return null
         return <div key={guardian.id} role="group" className={`guardian-slide ${offset === 0 ? 'is-active' : offset === 1 ? 'is-next' : 'is-previous'}${guardian.edition === 'hidden' ? ' is-secret-edition' : ''}`} aria-hidden={index !== active} aria-roledescription={copy.slide} aria-label={`${index + 1} / ${guardians.length}: ${guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']}`}>
-          <img className={`painted-guardian guardian-character${index === active && !interacting && !hoveringFigure && !dragging && visible && !pagePaused && !reducedMotion ? ' is-moving' : ''}`} {...responsiveArtwork(guardian)} fetchPriority={index === active ? 'high' : 'low'} alt={guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']} decoding="async" draggable={false}/>
+          <img className={`painted-guardian guardian-character${index === active && !interacting && !hoveringFigure && !dragging && visible && !pagePaused && !reducedMotion ? ' is-moving' : ''}`} {...responsiveArtwork(guardian)} fetchPriority={index === active ? 'high' : 'low'} alt={guardian.identity.name[i18n.language === 'en' ? 'en' : 'zh']} decoding="async" onLoad={event => warmCharacterMask(event.currentTarget)} draggable={false}/>
         </div>
       })}
       </div>

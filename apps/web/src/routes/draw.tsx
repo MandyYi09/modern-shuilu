@@ -15,7 +15,7 @@ export const Route = createFileRoute('/draw')({ component: DrawPage })
 
 type CardPhase = 'sealed' | 'character' | 'original'
 
-export function DrawPage() {
+function DrawPage() {
   const { i18n } = useTranslation()
   const en = i18n.language === 'en'
   const drawn = useDailyDraw()
